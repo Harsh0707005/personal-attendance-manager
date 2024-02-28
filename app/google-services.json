@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1062862133047",
+    "project_id": "personal-attendance-manager",
+    "storage_bucket": "personal-attendance-manager.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1062862133047:android:32e6f874d5f80c6515acb2",
+        "android_client_info": {
+          "package_name": "com.thattechyguy.personalattendancemanager"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyATRheXVNTpB0Z-6eKhDZ0CgOnlVnlz-Xg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
