@@ -12,7 +12,20 @@
           "package_name": "com.thattechyguy.personalattendancemanager"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "1062862133047-6ndi6kclpai3uv8ihoa8ac9iv847i0ab.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.thattechyguy.personalattendancemanager",
+            "certificate_hash": "387e3c5501d9bda97c51d40a7ad670e94729dd7f"
+          }
+        },
+        {
+          "client_id": "1062862133047-3dbns7tsok8t2i4j99dskajt9pni8iuc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyATRheXVNTpB0Z-6eKhDZ0CgOnlVnlz-Xg"
@@ -20,7 +33,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1062862133047-3dbns7tsok8t2i4j99dskajt9pni8iuc.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }
