@@ -1,8 +1,5 @@
 package com.thattechyguy.personalattendancemanager;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -11,6 +8,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -21,6 +22,8 @@ public class Login extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private EditText login_email_edittext, login_password_edittext;
     private Button loginBtn;
+    private SignInButton google_signin_btn;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,6 +32,7 @@ public class Login extends AppCompatActivity {
         login_email_edittext = findViewById(R.id.login_email_edittext);
         login_password_edittext = findViewById(R.id.login_password_edittext);
         loginBtn = findViewById(R.id.loginBtn);
+        google_signin_btn = findViewById(R.id.google_signin_btn);
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -44,10 +48,10 @@ public class Login extends AppCompatActivity {
                 String email = login_email_edittext.getText().toString();
                 String password = login_password_edittext.getText().toString();
 
-                if (email.isEmpty() || password.isEmpty()){
+                if (email.isEmpty() || password.isEmpty()) {
                     Toast.makeText(Login.this, "Email or Password cannot be Empty!!!", Toast.LENGTH_SHORT).show();
                     return;
-                }else if (password.length()<=6){
+                } else if (password.length() <= 6) {
                     Toast.makeText(Login.this, "Password should have atleast 6 characters", Toast.LENGTH_SHORT).show();
                     return;
                 }
