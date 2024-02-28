@@ -22,7 +22,7 @@ public class Login extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private EditText login_email_edittext, login_password_edittext;
     private Button loginBtn;
-    private SignInButton google_signin_btn;
+//    private SignInButton google_signin_btn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,14 +32,16 @@ public class Login extends AppCompatActivity {
         login_email_edittext = findViewById(R.id.login_email_edittext);
         login_password_edittext = findViewById(R.id.login_password_edittext);
         loginBtn = findViewById(R.id.loginBtn);
-        google_signin_btn = findViewById(R.id.google_signin_btn);
+//        google_signin_btn = findViewById(R.id.google_signin_btn);
 
         mAuth = FirebaseAuth.getInstance();
 
         FirebaseUser user = mAuth.getCurrentUser();
-//        if (user != null) {
-//            Intent i = new Intent(this, homeBottomNav.class);
-//        }
+        if (user != null) {
+            Intent i = new Intent(this, homeBottomNav.class);
+            startActivity(i);
+            finish();
+        }
 
         loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
