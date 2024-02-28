@@ -6,7 +6,7 @@
         android:icon="@drawable/dashboard_icon"
         />
     <item
-        android:id="@+id/manage_menu"
+        android:id="@+id/schedule_manage_menu"
         android:title="Manage Schedule"
         android:icon="@drawable/manage_schedule_icon"/>
     <item
