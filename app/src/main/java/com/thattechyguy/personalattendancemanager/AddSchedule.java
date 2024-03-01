@@ -14,11 +14,13 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.thattechyguy.personalattendancemanager.Interfaces.intSuccessCallback;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 
 public class AddSchedule extends AppCompatActivity {
 
-    private EditText scheduleNameEdittext, scheduleDescriptionEdittext;
+    private EditText scheduleNameEdittext, scheduleDescriptionEdittext, classesNamesEdittext;
     private Button addSchedule;
     private FirebaseAuth mAuth;
 
@@ -29,6 +31,7 @@ public class AddSchedule extends AppCompatActivity {
 
         scheduleNameEdittext = findViewById(R.id.scheduleNameEdittext);
         scheduleDescriptionEdittext = findViewById(R.id.scheduleDescriptionEdittext);
+        classesNamesEdittext = findViewById(R.id.classesNamesEdittext);
         addSchedule = findViewById(R.id.addSchedule);
 
         mAuth = FirebaseAuth.getInstance();
@@ -48,13 +51,14 @@ public class AddSchedule extends AppCompatActivity {
             dayButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    String clickedId = String.valueOf(dayButton.getId());
-                    if(daysSelected.contains(clickedId)){
-                        daysSelected.remove(clickedId);
+//                    String clickedId = String.valueOf(dayButton.getId());
+                    String day = String.valueOf(dayButton.getText());
+                    if(daysSelected.contains(day)){
+                        daysSelected.remove(day);
                         dayButton.setBackgroundResource(R.drawable.rounded_blue_border_button);
                         dayButton.setTextColor(Color.BLACK);
                     }else{
-                        daysSelected.add(clickedId);
+                        daysSelected.add(day);
                         dayButton.setBackgroundResource(R.drawable.rounded_blue_button);
                         dayButton.setTextColor(Color.WHITE);
                     }
@@ -80,10 +84,13 @@ public class AddSchedule extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String scheduleName = scheduleNameEdittext.getText().toString();
-                String scheduleDesciption = scheduleDescriptionEdittext.getText().toString();
+                String scheduleDescription = scheduleDescriptionEdittext.getText().toString();
+                String classesNames = classesNamesEdittext.getText().toString();
 
-                if(!scheduleName.isEmpty()){
-                    firebase.addSchedule(uid, scheduleName, scheduleDesciption, new intSuccessCallback() {
+                List<String> classesList = Arrays.asList(classesNames.split("\\s*,\\s*"));
+
+                if(!scheduleName.isEmpty() && !classesNames.isEmpty() && !daysSelected.isEmpty()){
+                    firebase.addSchedule(uid, scheduleName, scheduleDescription, classesList, daysSelected, new intSuccessCallback() {
                         @Override
                         public void onCallback(int success) {
                             if (success==1){

@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 
 public class firebaseManage {
     private DatabaseReference mDatabase;
@@ -60,17 +61,19 @@ public class firebaseManage {
             }
         });
     }
-    public void addSchedule(String uid, String scheduleName, String scheduleDescription, intSuccessCallback myCallback){
+    public void addSchedule(String uid, String scheduleName, String scheduleDescription, List<String> classesList, ArrayList<String> daysSelected, intSuccessCallback myCallback){
         mDatabase = firebaseDatabase.getReference("attendance");
 
         String uniqueId = mDatabase.child(uid).push().getKey();
 
-        HashMap<String, String> metaData = new HashMap<>();
+        HashMap<String, Object> metaData = new HashMap<>();
         metaData.put("Name", scheduleName);
         metaData.put("description", scheduleDescription);
+        metaData.put("classes", classesList);
+        metaData.put("days", daysSelected);
         metaData.put("attended", "0");
         metaData.put("total", "0");
-        metaData.put("timestamp", String.valueOf(ServerValue.TIMESTAMP));
+        metaData.put("timestamp", ServerValue.TIMESTAMP);
 
         mDatabase.child(uid).child(uniqueId).setValue(metaData).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
