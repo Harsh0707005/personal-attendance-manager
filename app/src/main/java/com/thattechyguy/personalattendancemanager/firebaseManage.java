@@ -1,16 +1,20 @@
 package com.thattechyguy.personalattendancemanager;
 
 import android.util.Log;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
+import com.thattechyguy.personalattendancemanager.Interfaces.ArraylistHashMapCallback;
+import com.thattechyguy.personalattendancemanager.Interfaces.intSuccessCallback;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -50,6 +54,29 @@ public class firebaseManage {
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 Log.d("harsh", "Error fetching data");
+            }
+        });
+    }
+    public void addSchedule(String uid, String scheduleName, String scheduleDescription, intSuccessCallback myCallback){
+        mDatabase = firebaseDatabase.getReference("attendance");
+
+        String uniqueId = mDatabase.child(uid).push().getKey();
+
+        HashMap<String, String> metaData = new HashMap<>();
+        metaData.put("Name", scheduleName);
+        metaData.put("description", scheduleDescription);
+        metaData.put("attended", "0");
+        metaData.put("total", "0");
+        metaData.put("timestamp", String.valueOf(ServerValue.TIMESTAMP));
+
+        mDatabase.child(uid).child(uniqueId).setValue(metaData).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if(task.isSuccessful()){
+                    myCallback.onCallback(1);
+                }else {
+                    myCallback.onCallback(0);
+                }
             }
         });
     }

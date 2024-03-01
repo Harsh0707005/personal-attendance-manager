@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".AddSchedule">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:elevation="4dp"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/toolbar"
+        android:gravity="center"
+        android:layout_margin="20dp">
+
+        <EditText
+            android:id="@+id/scheduleNameEdittext"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/rounded_input"
+            android:hint="Schedule Name"
+            android:inputType="text"
+            android:padding="10dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginVertical="20dp"/>
+
+        <EditText
+            android:id="@+id/scheduleDescriptionEdittext"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/rounded_input"
+            android:inputType="text"
+            android:hint="Schedule Description (Optional)"
+            android:layout_below="@id/scheduleNameEdittext"
+            android:lines="3"
+            android:textAlignment="textStart"
+            android:padding="10dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginVertical="20dp"/>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/addSchedule"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/rounded_blue_button"
+            android:text="Add Schedule"
+            android:padding="10dp"
+            android:layout_below="@id/scheduleDescriptionEdittext"
+            android:textAllCaps="true"
+            android:layout_centerHorizontal="true"
+            android:textColor="@color/white"
+            android:layout_marginVertical="20dp"/>
+
+    </RelativeLayout>
+</RelativeLayout>

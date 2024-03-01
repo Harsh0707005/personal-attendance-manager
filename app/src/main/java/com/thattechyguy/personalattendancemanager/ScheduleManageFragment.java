@@ -1,15 +1,19 @@
 package com.thattechyguy.personalattendancemanager;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.thattechyguy.personalattendancemanager.Interfaces.ArraylistHashMapCallback;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -32,6 +36,8 @@ public class ScheduleManageFragment extends Fragment {
 
     private schedulesCardAdapter adapter;
     private ArrayList<HashMap<String, String>> dataList;
+    private FirebaseAuth mAuth;
+    private String uid;
 
     public ScheduleManageFragment() {
         // Required empty public constructor
@@ -69,9 +75,19 @@ public class ScheduleManageFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_schedule_manage, container, false);
 
+        TextView addScheduleButton = rootView.findViewById(R.id.addScheduleButton);
         RecyclerView schedulesRecyclerView = rootView.findViewById(R.id.schedulesRecyclerView);
 
-//        dataList = new ArrayList<HashMap<String, String>>();
+        mAuth = FirebaseAuth.getInstance();
+        uid = mAuth.getCurrentUser().getUid();
+
+        addScheduleButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(rootView.getContext(), AddSchedule.class);
+                startActivity(i);
+            }
+        });
 
         if (dataList == null) {
             dataList = new ArrayList<>();
@@ -89,7 +105,7 @@ public class ScheduleManageFragment extends Fragment {
     }
     private void loadSchedules(){
         firebaseManage firebase = new firebaseManage();
-        firebase.getScheduleData("iUXcZmmL2nZvZvFBIwMXG3hm2VP2", new ArraylistHashMapCallback() {
+        firebase.getScheduleData(uid, new ArraylistHashMapCallback() {
             @Override
             public void onCallback(ArrayList<HashMap<String, String>> data) {
                 dataList.clear(); // Clear existing data

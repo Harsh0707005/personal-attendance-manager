@@ -1,4 +1,4 @@
-package com.thattechyguy.personalattendancemanager;
+package com.thattechyguy.personalattendancemanager.Interfaces;
 
 import java.util.ArrayList;
 import java.util.HashMap;

@@ -45,7 +45,12 @@ public class schedulesCardAdapter extends RecyclerView.Adapter<schedulesCardAdap
         String attended = dataList.get(position).get("numAttended");
         String total = dataList.get(position).get("numTotal");
         String desc = dataList.get(position).get("scheduleDescription");
-        String percent = String.valueOf((Integer.parseInt(attended)*100)/Integer.parseInt(total));
+        if (!total.equals("0") && !attended.equals("0")) {
+            String percent = String.valueOf((Integer.parseInt(attended) * 100) / Integer.parseInt(total));
+            numPercent.setText(percent+"%");
+        }else {
+            numPercent.setText("0%");
+        }
 
         scheduleName.setText(name);
         if (desc!="null") {
@@ -53,7 +58,6 @@ public class schedulesCardAdapter extends RecyclerView.Adapter<schedulesCardAdap
         }
         numAttended.setText("Attended: " + attended);
         numTotal.setText("Total: " + total);
-        numPercent.setText(percent+"%");
     }
 
     @Override

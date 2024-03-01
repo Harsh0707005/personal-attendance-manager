@@ -34,6 +34,7 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/black"
                 android:layout_margin="5dp"
+                android:textStyle="italic"
                 android:layout_below="@id/scheduleName"/>
 
             <TextView
