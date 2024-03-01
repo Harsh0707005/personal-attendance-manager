@@ -38,6 +38,7 @@ public class firebaseManage {
                     HashMap<String, String> item = new HashMap<String, String>();
                     item.put("uniqueId", scheduleSnapshot.getKey());
                     item.put("scheduleName", String.valueOf(scheduleSnapshot.child("Name").getValue()));
+                    item.put("scheduleDescription", String.valueOf(scheduleSnapshot.child("description").getValue()));
                     item.put("numAttended", String.valueOf(scheduleSnapshot.child("attended").getValue()));
                     item.put("numTotal", String.valueOf(scheduleSnapshot.child("total").getValue()));
 

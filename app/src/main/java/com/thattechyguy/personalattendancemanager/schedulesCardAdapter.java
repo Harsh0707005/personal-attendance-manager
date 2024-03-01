@@ -1,6 +1,7 @@
 package com.thattechyguy.personalattendancemanager;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,14 +36,24 @@ public class schedulesCardAdapter extends RecyclerView.Adapter<schedulesCardAdap
     public void onBindViewHolder(@NonNull schedulesCardAdapter.ViewHolder holder, int position) {
 
         TextView scheduleName = holder.scheduleName;
+        TextView scheduleDescription = holder.scheduleDescription;
         TextView numAttended = holder.numAttended;
         TextView numTotal = holder.numTotal;
         TextView numPercent = holder.numPercent;
 
-        scheduleName.setText(dataList.get(position).get("scheduleName"));
-        numAttended.setText("Attended: " + dataList.get(position).get("numAttended"));
-        numTotal.setText("Total: " + dataList.get(position).get("numTotal"));
-//        scheduleName.setText(dataList.get(position).get("scheduleName"));
+        String name = dataList.get(position).get("scheduleName");
+        String attended = dataList.get(position).get("numAttended");
+        String total = dataList.get(position).get("numTotal");
+        String desc = dataList.get(position).get("scheduleDescription");
+        String percent = String.valueOf((Integer.parseInt(attended)*100)/Integer.parseInt(total));
+
+        scheduleName.setText(name);
+        if (desc!="null") {
+            scheduleDescription.setText(desc);
+        }
+        numAttended.setText("Attended: " + attended);
+        numTotal.setText("Total: " + total);
+        numPercent.setText(percent+"%");
     }
 
     @Override
@@ -52,12 +63,13 @@ public class schedulesCardAdapter extends RecyclerView.Adapter<schedulesCardAdap
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
-        TextView scheduleName, numAttended, numTotal, numPercent;
+        TextView scheduleName, scheduleDescription, numAttended, numTotal, numPercent;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
             scheduleName = itemView.findViewById(R.id.scheduleName);
+            scheduleDescription = itemView.findViewById(R.id.scheduleDescription);
             numAttended = itemView.findViewById(R.id.numAttended);
             numTotal = itemView.findViewById(R.id.numTotal);
             numPercent = itemView.findViewById(R.id.numPercent);

@@ -93,7 +93,6 @@ public class ScheduleManageFragment extends Fragment {
             @Override
             public void onCallback(ArrayList<HashMap<String, String>> data) {
                 dataList.clear(); // Clear existing data
-                Log.d("harsh", String.valueOf(dataList));
                 dataList.addAll(data); // Add new data
                 adapter.notifyDataSetChanged();
             }
