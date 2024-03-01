@@ -17,6 +17,8 @@ import com.thattechyguy.personalattendancemanager.Interfaces.ArraylistHashMapCal
 import com.thattechyguy.personalattendancemanager.Interfaces.intSuccessCallback;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 
 public class firebaseManage {
@@ -48,6 +50,7 @@ public class firebaseManage {
 
                     scheduleMetaData.add(item);
                 }
+                Collections.reverse(scheduleMetaData);
                 myCallback.onCallback(scheduleMetaData);
             }
 
