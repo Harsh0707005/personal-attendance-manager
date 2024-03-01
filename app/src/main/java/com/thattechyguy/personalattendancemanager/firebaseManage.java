@@ -44,6 +44,7 @@ public class firebaseManage {
                 for (DataSnapshot scheduleSnapshot: snapshot.getChildren()){
                     HashMap<String, String> item = new HashMap<String, String>();
                     item.put("uniqueId", scheduleSnapshot.getKey());
+//                    Log.d("harsh", String.valueOf(scheduleSnapshot.child("days").getValue()));
                     item.put("scheduleName", String.valueOf(scheduleSnapshot.child("Name").getValue()));
                     item.put("scheduleDescription", String.valueOf(scheduleSnapshot.child("description").getValue()));
                     item.put("numAttended", String.valueOf(scheduleSnapshot.child("attended").getValue()));
@@ -83,6 +84,27 @@ public class firebaseManage {
                 }else {
                     myCallback.onCallback(0);
                 }
+            }
+        });
+    }
+    public void getClassData(String path){
+        DatabaseReference loc = firebaseDatabase.getReference(path);
+
+        Query query = loc.orderByChild("timestamp");
+
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot scheduleSnapshot: snapshot.getChildren()){
+                    if (scheduleSnapshot.hasChildren()) {
+                        Log.d("harsh", String.valueOf(scheduleSnapshot));
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.d("harsh", "Error fetching data");
             }
         });
     }

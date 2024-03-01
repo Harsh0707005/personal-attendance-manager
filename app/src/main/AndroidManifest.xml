@@ -15,6 +15,9 @@
         android:theme="@style/Theme.PersonalAttendanceManager"
         tools:targetApi="31">
         <activity
+            android:name=".classes"
+            android:exported="false" />
+        <activity
             android:name=".AddSchedule"
             android:exported="false" />
         <activity
