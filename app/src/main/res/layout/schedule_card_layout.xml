@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_gravity="center">
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="15dp"
+        app:cardCornerRadius="20dp"
+        android:elevation="10dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="20dp">
+
+            <TextView
+                android:id="@+id/scheduleName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Schedule Name"
+                android:layout_centerHorizontal="true"
+                android:textStyle="bold"
+                android:textSize="19sp"/>
+
+            <TextView
+                android:id="@+id/scheduleDescription"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/scheduleName"/>
+
+            <TextView
+                android:id="@+id/numAttended"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Attended:"
+                android:layout_below="@id/scheduleDescription"/>
+
+            <TextView
+                android:id="@+id/numTotal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Total:"
+                android:layout_below="@id/numAttended"/>
+
+            <TextView
+                android:id="@+id/numPercent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Percentage:"
+                android:textSize="16sp"
+                android:layout_alignParentEnd="true"
+                android:layout_below="@id/scheduleDescription"/>
+
+        </RelativeLayout>
+
+    </androidx.cardview.widget.CardView>
+
+</RelativeLayout>

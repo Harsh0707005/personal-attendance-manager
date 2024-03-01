@@ -1,0 +1,47 @@
+package com.thattechyguy.personalattendancemanager;
+
+import androidx.appcompat.app.AppCompatActivity;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+import android.os.Bundle;
+
+public class samplePush extends AppCompatActivity {
+    private DatabaseReference attendanceRef;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_sample_push);
+
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        attendanceRef = database.getReference("attendance");
+
+        // Sample data for user ID: iUXcZmmL2nZvZvFBIwMXG3hm2VP2
+        String userId = "iUXcZmmL2nZvZvFBIwMXG3hm2VP2";
+
+        // Sample data for schedule 1
+        String scheduleKey1 = attendanceRef.child(userId).push().getKey(); // Generate unique key for schedule
+        String scheduleName1 = "School";
+        long timestamp1 = System.currentTimeMillis();
+        int totalClasses1 = 20;
+        int attendedClasses1 = 15;
+
+        // Push schedule 1 data to Firebase
+        attendanceRef.child(userId).child(scheduleKey1).child("Name").setValue(scheduleName1);
+        attendanceRef.child(userId).child(scheduleKey1).child("timestamp").setValue(timestamp1);
+        attendanceRef.child(userId).child(scheduleKey1).child("total").setValue(totalClasses1);
+        attendanceRef.child(userId).child(scheduleKey1).child("attended").setValue(attendedClasses1);
+
+        // Sample data for day 1 of schedule 1
+        String dayKey1_1 = attendanceRef.child(userId).child(scheduleKey1).push().getKey(); // Generate unique key for day
+        long timestampDay1_1 = timestamp1; // Change timestamp for day 1 if needed
+        int totalClassesDay1_1 = 50;
+        int attendedClassesDay1_1 = 4;
+
+        // Push day 1 data of schedule 1 to Firebase
+        attendanceRef.child(userId).child(scheduleKey1).child(dayKey1_1).child("timestamp").setValue(timestampDay1_1);
+        attendanceRef.child(userId).child(scheduleKey1).child(dayKey1_1).child("total").setValue(totalClassesDay1_1);
+        attendanceRef.child(userId).child(scheduleKey1).child(dayKey1_1).child("attended").setValue(attendedClassesDay1_1);
+    }
+}

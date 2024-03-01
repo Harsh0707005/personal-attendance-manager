@@ -3,10 +3,16 @@ package com.thattechyguy.personalattendancemanager;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -23,6 +29,9 @@ public class ScheduleManageFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    private schedulesCardAdapter adapter;
+    private ArrayList<HashMap<String, String>> dataList;
 
     public ScheduleManageFragment() {
         // Required empty public constructor
@@ -58,7 +67,36 @@ public class ScheduleManageFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_schedule_manage, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_schedule_manage, container, false);
+
+        RecyclerView schedulesRecyclerView = rootView.findViewById(R.id.schedulesRecyclerView);
+
+//        dataList = new ArrayList<HashMap<String, String>>();
+
+        if (dataList == null) {
+            dataList = new ArrayList<>();
+        }
+
+        if (adapter == null) {
+            adapter = new schedulesCardAdapter(rootView.getContext(), dataList);
+            schedulesRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+            schedulesRecyclerView.setAdapter(adapter);
+        }
+
+        loadSchedules();
+
+        return rootView;
+    }
+    private void loadSchedules(){
+        firebaseManage firebase = new firebaseManage();
+        firebase.getScheduleData("iUXcZmmL2nZvZvFBIwMXG3hm2VP2", new ArraylistHashMapCallback() {
+            @Override
+            public void onCallback(ArrayList<HashMap<String, String>> data) {
+                dataList.clear(); // Clear existing data
+                Log.d("harsh", String.valueOf(dataList));
+                dataList.addAll(data); // Add new data
+                adapter.notifyDataSetChanged();
+            }
+        });
     }
 }
