@@ -70,7 +70,7 @@ public class AddSchedule extends AppCompatActivity {
 //                        dayButton.setTextColor(Color.BLACK);
 //
 //                    }
-                    Log.d("harsh", String.valueOf(daysSelected));
+//                    Log.d("harsh", String.valueOf(daysSelected));
                 }
             });
         }
