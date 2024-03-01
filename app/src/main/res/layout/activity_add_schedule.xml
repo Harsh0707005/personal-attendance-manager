@@ -46,14 +46,137 @@
             android:layout_centerHorizontal="true"
             android:layout_marginVertical="20dp"/>
 
+        <EditText
+            android:id="@+id/classesNamesEdittext"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/rounded_input"
+            android:inputType="text"
+            android:hint="Classes (Comma Separated)"
+            android:layout_below="@id/scheduleDescriptionEdittext"
+            android:lines="3"
+            android:textAlignment="textStart"
+            android:padding="10dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginVertical="20dp"/>
+
+
+
+        <TableLayout
+            android:id="@+id/daysTableLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/classesNamesEdittext">
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal">
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/monday"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Monday"
+                    android:textAllCaps="false"
+                    android:layout_marginHorizontal="5dp"
+                    android:layout_marginBottom="20dp"
+                    android:background="@drawable/rounded_blue_border_button"
+                    android:foreground="?attr/selectableItemBackground"
+                    />
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/tuesday"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Tuesday"
+                    android:textAllCaps="false"
+                    android:layout_marginHorizontal="5dp"
+                    android:layout_marginBottom="20dp"
+                    android:background="@drawable/rounded_blue_border_button"
+                    android:foreground="?attr/selectableItemBackground"
+                    />
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/wednesday"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Wednesday"
+                    android:textAllCaps="false"
+                    android:layout_marginHorizontal="5dp"
+                    android:layout_marginBottom="20dp"
+                    android:background="@drawable/rounded_blue_border_button"
+                    android:foreground="?attr/selectableItemBackground"
+                    />
+
+            </TableRow>
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal">
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/thursday"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Thursday"
+                    android:textAllCaps="false"
+                    android:layout_marginHorizontal="5dp"
+                    android:layout_marginBottom="20dp"
+                    android:background="@drawable/rounded_blue_border_button"
+                    android:foreground="?attr/selectableItemBackground"
+                    />
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/friday"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Friday"
+                    android:textAllCaps="false"
+                    android:layout_marginHorizontal="5dp"
+                    android:layout_marginBottom="20dp"
+                    android:background="@drawable/rounded_blue_border_button"
+                    android:foreground="?attr/selectableItemBackground"
+                    />
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/saturday"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Saturday"
+                    android:textAllCaps="false"
+                    android:layout_marginHorizontal="5dp"
+                    android:layout_marginBottom="20dp"
+                    android:background="@drawable/rounded_blue_border_button"
+                    android:foreground="?attr/selectableItemBackground"
+                    />
+
+            </TableRow>
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal">
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/sunday"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Sunday"
+                    android:textAllCaps="false"
+                    android:layout_marginHorizontal="5dp"
+                    android:layout_marginBottom="20dp"
+                    android:background="@drawable/rounded_blue_border_button"
+                    android:foreground="?attr/selectableItemBackground"
+                    />
+
+            </TableRow>
+
+        </TableLayout>
+
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/addSchedule"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/rounded_blue_button"
             android:text="Add Schedule"
-            android:padding="10dp"
-            android:layout_below="@id/scheduleDescriptionEdittext"
+            android:padding="15dp"
+            android:layout_below="@id/daysTableLayout"
             android:textAllCaps="true"
             android:layout_centerHorizontal="true"
             android:textColor="@color/white"

@@ -2,7 +2,9 @@ package com.thattechyguy.personalattendancemanager;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -10,6 +12,9 @@ import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.thattechyguy.personalattendancemanager.Interfaces.intSuccessCallback;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 public class AddSchedule extends AppCompatActivity {
 
@@ -29,6 +34,47 @@ public class AddSchedule extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         String uid = mAuth.getCurrentUser().getUid();
         firebaseManage firebase = new firebaseManage();
+
+        int[] daysButtonIds = {
+                R.id.monday, R.id.tuesday, R.id.wednesday, R.id.thursday,
+                R.id.friday, R.id.saturday, R.id.sunday
+        };
+//        HashMap<String, Integer> daysSelected = new HashMap<String, Integer>();
+        ArrayList<String> daysSelected = new ArrayList<>();
+
+        for (int buttonId : daysButtonIds) {
+            Button dayButton = findViewById(buttonId);
+//            daysSelected.put(String.valueOf(buttonId), 0);
+            dayButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String clickedId = String.valueOf(dayButton.getId());
+                    if(daysSelected.contains(clickedId)){
+                        daysSelected.remove(clickedId);
+                        dayButton.setBackgroundResource(R.drawable.rounded_blue_border_button);
+                        dayButton.setTextColor(Color.BLACK);
+                    }else{
+                        daysSelected.add(clickedId);
+                        dayButton.setBackgroundResource(R.drawable.rounded_blue_button);
+                        dayButton.setTextColor(Color.WHITE);
+                    }
+
+//                    if (daysSelected.get(String.valueOf(dayButton.getId())).equals(0)) {
+//                        // Change the background to R.drawable.rounded_selected_button
+//                        dayButton.setBackgroundResource(R.drawable.rounded_blue_button);
+//                        daysSelected.replace(String.valueOf(dayButton.getId()), 1);
+//                        dayButton.setTextColor(Color.WHITE);
+//                    } else {
+//                        dayButton.setBackgroundResource(R.drawable.rounded_blue_border_button);
+//                        daysSelected.replace(String.valueOf(dayButton.getId()), 0);
+//                        dayButton.setTextColor(Color.BLACK);
+//
+//                    }
+                    Log.d("harsh", String.valueOf(daysSelected));
+                }
+            });
+        }
+
 
         addSchedule.setOnClickListener(new View.OnClickListener() {
             @Override
