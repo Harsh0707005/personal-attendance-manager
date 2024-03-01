@@ -5,8 +5,27 @@
     android:layout_height="match_parent"
     tools:context=".ScheduleManageFragment">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/schedulesRecyclerView"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/addGroupButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="+ Add Schedule"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:paddingHorizontal="30dp"
+            android:paddingVertical="15dp"
+            android:textColor="@color/black"
+            android:layout_alignParentEnd="true"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/schedulesRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/addGroupButton"/>
+
+    </RelativeLayout>
 </FrameLayout>
