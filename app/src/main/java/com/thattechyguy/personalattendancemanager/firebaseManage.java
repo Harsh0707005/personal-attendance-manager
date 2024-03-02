@@ -62,7 +62,7 @@ public class firebaseManage {
             }
         });
     }
-    public void addSchedule(String uid, String scheduleName, String scheduleDescription, List<String> classesList, ArrayList<String> daysSelected, intSuccessCallback myCallback){
+    public void addSchedule(String uid, String scheduleName, String scheduleDescription, HashMap<String, Object> classes, intSuccessCallback myCallback){
         mDatabase = firebaseDatabase.getReference("attendance");
 
         String uniqueId = mDatabase.child(uid).push().getKey();
@@ -70,8 +70,9 @@ public class firebaseManage {
         HashMap<String, Object> metaData = new HashMap<>();
         metaData.put("Name", scheduleName);
         metaData.put("description", scheduleDescription);
-        metaData.put("classes", classesList);
-        metaData.put("days", daysSelected);
+//        metaData.put("classes", classesList);
+//        metaData.put("days", daysSelected);
+        metaData.put("dailyClasses", classes);
         metaData.put("attended", "0");
         metaData.put("total", "0");
         metaData.put("timestamp", ServerValue.TIMESTAMP);
