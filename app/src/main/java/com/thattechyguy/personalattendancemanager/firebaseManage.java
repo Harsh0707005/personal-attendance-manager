@@ -40,9 +40,9 @@ public class firebaseManage {
         query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                ArrayList<HashMap<String, String>> scheduleMetaData = new ArrayList<HashMap<String, String>>();
+                ArrayList<HashMap<String, Object>> scheduleMetaData = new ArrayList<HashMap<String, Object>>();
                 for (DataSnapshot scheduleSnapshot: snapshot.getChildren()){
-                    HashMap<String, String> item = new HashMap<String, String>();
+                    HashMap<String, Object> item = new HashMap<String, Object>();
                     item.put("uniqueId", scheduleSnapshot.getKey());
 //                    Log.d("harsh", String.valueOf(scheduleSnapshot.child("days").getValue()));
                     item.put("scheduleName", String.valueOf(scheduleSnapshot.child("Name").getValue()));
@@ -87,7 +87,7 @@ public class firebaseManage {
             }
         });
     }
-    public void getClassData(String path){
+    public void getClassData(String path, ArraylistHashMapCallback myCallback){
         DatabaseReference loc = firebaseDatabase.getReference(path);
 
         Query query = loc.orderByChild("timestamp");
@@ -95,11 +95,27 @@ public class firebaseManage {
         query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                ArrayList<HashMap<String, Object>> classesData = new ArrayList<HashMap<String, Object>>();
                 for (DataSnapshot scheduleSnapshot: snapshot.getChildren()){
+                    HashMap<String, Object> item = new HashMap<String, Object>();
                     if (scheduleSnapshot.hasChildren()) {
-                        Log.d("harsh", String.valueOf(scheduleSnapshot));
+//                        Log.d("harsh", scheduleSnapshot.getKey());
+                        if(scheduleSnapshot.getKey().equals("days") || scheduleSnapshot.getKey().equals("classes")){
+                            item.put(scheduleSnapshot.getKey(), scheduleSnapshot.getValue());
+                            classesData.add(item);
+                            continue;
+                        }
+                        item.put("uniqueClassId", scheduleSnapshot.getKey());
+                        item.put("numAttended", scheduleSnapshot.child("attended").getValue());
+                        item.put("numTotal", scheduleSnapshot.child("total").getValue());
+
+                        classesData.add(item);
                     }
+
                 }
+                Collections.reverse(classesData);
+//                Log.d("harsh", String.valueOf(classesData));
+                myCallback.onCallback(classesData);
             }
 
             @Override

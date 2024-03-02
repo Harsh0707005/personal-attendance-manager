@@ -35,7 +35,7 @@ public class ScheduleManageFragment extends Fragment {
     private String mParam2;
 
     private schedulesCardAdapter adapter;
-    private ArrayList<HashMap<String, String>> dataList;
+    private ArrayList<HashMap<String, Object>> dataList;
     private FirebaseAuth mAuth;
     private String uid;
 
@@ -107,7 +107,7 @@ public class ScheduleManageFragment extends Fragment {
         firebaseManage firebase = new firebaseManage();
         firebase.getScheduleData(uid, new ArraylistHashMapCallback() {
             @Override
-            public void onCallback(ArrayList<HashMap<String, String>> data) {
+            public void onCallback(ArrayList<HashMap<String, Object>> data) {
                 dataList.clear(); // Clear existing data
                 dataList.addAll(data); // Add new data
                 adapter.notifyDataSetChanged();

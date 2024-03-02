@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.activity.OnBackPressedDispatcherKt;
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
@@ -20,10 +21,10 @@ import java.util.HashMap;
 
 public class schedulesCardAdapter extends RecyclerView.Adapter<schedulesCardAdapter.ViewHolder> {
 
-    private ArrayList<HashMap<String, String>> dataList;
+    private ArrayList<HashMap<String, Object>> dataList;
     private Context context;
 
-    public schedulesCardAdapter(Context context, ArrayList<HashMap<String, String>> dataList){
+    public schedulesCardAdapter(Context context, ArrayList<HashMap<String, Object>> dataList){
         this.context = context;
         this.dataList = dataList;
     }
@@ -45,11 +46,11 @@ public class schedulesCardAdapter extends RecyclerView.Adapter<schedulesCardAdap
         CardView cardView = holder.cardView;
 
 
-        String uniqueId = dataList.get(position).get("uniqueId");
-        String name = dataList.get(position).get("scheduleName");
-        String attended = dataList.get(position).get("numAttended");
-        String total = dataList.get(position).get("numTotal");
-        String desc = dataList.get(position).get("scheduleDescription");
+        String uniqueId = (String) dataList.get(position).get("uniqueId");
+        String name = (String) dataList.get(position).get("scheduleName");
+        String attended = (String) dataList.get(position).get("numAttended");
+        String total = (String) dataList.get(position).get("numTotal");
+        String desc = (String) dataList.get(position).get("scheduleDescription");
         if (!total.equals("0") && !attended.equals("0")) {
             String percent = String.valueOf((Integer.parseInt(attended) * 100) / Integer.parseInt(total));
             numPercent.setText(percent+"%");
