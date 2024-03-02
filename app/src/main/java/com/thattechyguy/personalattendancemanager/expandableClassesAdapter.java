@@ -8,6 +8,13 @@ import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.TextView;
 
+import java.text.DateFormatSymbols;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -60,9 +67,15 @@ public class expandableClassesAdapter extends BaseExpandableListAdapter {
             LayoutInflater inflater = (LayoutInflater)this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = inflater.inflate(R.layout.class_title, null);
         }
+        TextView date = convertView.findViewById(R.id.date);
         TextView day = convertView.findViewById(R.id.day);
+        TextView numAttended = convertView.findViewById(R.id.numAttended);
+        TextView numTotal = convertView.findViewById(R.id.numTotal);
         try{
+            date.setText(convertToDate(getGroup(groupPosition).get("date").toString()));
             day.setText(getGroup(groupPosition).get("day").toString());
+            numAttended.setText("Attended: " + getGroup(groupPosition).get("numAttended").toString());
+            numTotal.setText("Total: " + getGroup(groupPosition).get("numTotal").toString());
         }catch(Exception e){
             Log.d("harsh", e.getMessage());
         }
@@ -82,5 +95,22 @@ public class expandableClassesAdapter extends BaseExpandableListAdapter {
     @Override
     public boolean isChildSelectable(int groupPosition, int childPosition) {
         return false;
+    }
+
+    public String convertToDate(String input) {
+        SimpleDateFormat sdfInput = new SimpleDateFormat("ddMMyyyy", Locale.ENGLISH);
+        SimpleDateFormat sdfOutput = new SimpleDateFormat("d MMMM yyyy", Locale.ENGLISH);
+        try {
+            Date date = sdfInput.parse(input);
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(date);
+            int day = calendar.get(Calendar.DAY_OF_MONTH);
+            int month = calendar.get(Calendar.MONTH);
+            int year = calendar.get(Calendar.YEAR);
+            return day + " " + new DateFormatSymbols().getMonths()[month - 1] + " " + year;
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }

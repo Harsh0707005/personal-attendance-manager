@@ -25,10 +25,10 @@
                 android:gravity="center">
 
                 <TextView
-                    android:id="@+id/date"
+                    android:id="@+id/day"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Date"
+                    android:text="Day"
                     android:textStyle="bold"
                     android:layout_marginVertical="10dp"
                     android:layout_marginHorizontal="5dp"
@@ -47,10 +47,10 @@
                     android:textSize="20sp"/>
 
                 <TextView
-                    android:id="@+id/day"
+                    android:id="@+id/date"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Day"
+                    android:text="Date"
                     android:textStyle="bold"
                     android:layout_margin="10dp"
                     android:textColor="@color/black"
@@ -59,21 +59,21 @@
             </LinearLayout>
 
             <TextView
-                android:id="@+id/numAttended"
+                android:id="@+id/numTotal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/titleLayout"
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="5dp"
                 android:layout_marginBottom="5dp"
-                android:text="Attended:"
+                android:text="Total:"
                 android:textColor="@color/black" />
 
             <TextView
-                android:id="@+id/numTotal"
+                android:id="@+id/numAttended"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Total:"
+                android:text="Attended:"
                 android:layout_marginEnd="20dp"
                 android:textColor="@color/black"
                 android:layout_below="@id/titleLayout"
