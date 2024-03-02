@@ -5,9 +5,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -21,7 +26,10 @@ import java.util.List;
 public class AddSchedule extends AppCompatActivity {
 
     private EditText scheduleNameEdittext, scheduleDescriptionEdittext, classesNamesEdittext;
-    private Button addSchedule;
+    private Button addSchedule, addDay;
+    private LinearLayout classesLayout;
+    private Spinner daysSpinner;
+    private ArrayAdapter<String> adapter;
     private FirebaseAuth mAuth;
 
     @Override
@@ -32,81 +40,145 @@ public class AddSchedule extends AppCompatActivity {
         scheduleNameEdittext = findViewById(R.id.scheduleNameEdittext);
         scheduleDescriptionEdittext = findViewById(R.id.scheduleDescriptionEdittext);
         classesNamesEdittext = findViewById(R.id.classesNamesEdittext);
+        addDay = findViewById(R.id.addDay);
         addSchedule = findViewById(R.id.addSchedule);
+        daysSpinner = findViewById(R.id.daysSpinner);
+        classesLayout = findViewById(R.id.classesLayout);
 
-        mAuth = FirebaseAuth.getInstance();
-        String uid = mAuth.getCurrentUser().getUid();
-        firebaseManage firebase = new firebaseManage();
+        String[] daysStringArray = {"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"};
+        List<String> daysArray = new ArrayList<String>(Arrays.asList(daysStringArray));
 
-        int[] daysButtonIds = {
-                R.id.monday, R.id.tuesday, R.id.wednesday, R.id.thursday,
-                R.id.friday, R.id.saturday, R.id.sunday
-        };
-//        HashMap<String, Integer> daysSelected = new HashMap<String, Integer>();
-        ArrayList<String> daysSelected = new ArrayList<>();
+        HashMap<String, Object> classes = new HashMap<String, Object>();
 
-        for (int buttonId : daysButtonIds) {
-            Button dayButton = findViewById(buttonId);
-//            daysSelected.put(String.valueOf(buttonId), 0);
-            dayButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-//                    String clickedId = String.valueOf(dayButton.getId());
-                    String day = String.valueOf(dayButton.getText());
-                    if(daysSelected.contains(day)){
-                        daysSelected.remove(day);
-                        dayButton.setBackgroundResource(R.drawable.rounded_blue_border_button);
-                        dayButton.setTextColor(Color.BLACK);
-                    }else{
-                        daysSelected.add(day);
-                        dayButton.setBackgroundResource(R.drawable.rounded_blue_button);
-                        dayButton.setTextColor(Color.WHITE);
-                    }
+        adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, daysArray);
 
-//                    if (daysSelected.get(String.valueOf(dayButton.getId())).equals(0)) {
-//                        // Change the background to R.drawable.rounded_selected_button
-//                        dayButton.setBackgroundResource(R.drawable.rounded_blue_button);
-//                        daysSelected.replace(String.valueOf(dayButton.getId()), 1);
-//                        dayButton.setTextColor(Color.WHITE);
-//                    } else {
-//                        dayButton.setBackgroundResource(R.drawable.rounded_blue_border_button);
-//                        daysSelected.replace(String.valueOf(dayButton.getId()), 0);
-//                        dayButton.setTextColor(Color.BLACK);
-//
-//                    }
-//                    Log.d("harsh", String.valueOf(daysSelected));
-                }
-            });
-        }
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        daysSpinner.setAdapter(adapter);
 
 
-        addSchedule.setOnClickListener(new View.OnClickListener() {
+        final int[] currentSpinner = {R.id.daysSpinner};
+        final int[] currentEdittext = {R.id.classesNamesEdittext};
+
+        addDay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String scheduleName = scheduleNameEdittext.getText().toString();
-                String scheduleDescription = scheduleDescriptionEdittext.getText().toString();
-                String classesNames = classesNamesEdittext.getText().toString();
+                if (!((EditText) findViewById(currentEdittext[0])).getText().toString().isEmpty()){
+                    List<String> classesList = Arrays.asList(((EditText) findViewById(currentEdittext[0])).getText().toString().split("\\s*,\\s*"));
 
-                List<String> classesList = Arrays.asList(classesNames.split("\\s*,\\s*"));
+                    String selectedDay = ((Spinner) findViewById(currentSpinner[0])).getSelectedItem().toString();
 
-                if(!scheduleName.isEmpty() && !classesNames.isEmpty() && !daysSelected.isEmpty()){
-                    firebase.addSchedule(uid, scheduleName, scheduleDescription, classesList, daysSelected, new intSuccessCallback() {
-                        @Override
-                        public void onCallback(int success) {
-                            if (success==1){
-                                Toast.makeText(AddSchedule.this, "Schedule Added Successfully", Toast.LENGTH_SHORT).show();
-                                finish();
-                            }else{
-                                Toast.makeText(AddSchedule.this, "Error Adding Schedule", Toast.LENGTH_SHORT).show();
-                                finish();
-                            }
-                        }
-                    });
+                    classes.put(selectedDay, classesList);
+
+
+                    daysArray.remove(selectedDay);
+
+                    Log.d("harsh", String.valueOf(classes));
+                    if (daysArray.isEmpty()){
+                        ((Spinner) findViewById(currentSpinner[0])).setEnabled(false);
+                        ((EditText) findViewById(currentEdittext[0])).setEnabled(false);
+                        addDay.setVisibility(View.GONE);
+                        return;
+                    }
+
+                    View view = LayoutInflater.from(AddSchedule.this).inflate(R.layout.classes_day_layout, null);
+
+                    Spinner spinner = view.findViewById(R.id.spinner);
+                    spinner.setId(View.generateViewId());
+                    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    spinner.setAdapter(adapter);
+
+                    EditText editText = view.findViewById(R.id.edittext);
+                    editText.setId(View.generateViewId());
+
+                    classesLayout.addView(view);
+
+                    ((Spinner) findViewById(currentSpinner[0])).setEnabled(false);
+                    ((EditText) findViewById(currentEdittext[0])).setEnabled(false);
+
+                    currentEdittext[0] = editText.getId();
+                    currentSpinner[0] = spinner.getId();
+
                 }else{
-                    Toast.makeText(AddSchedule.this, "Schedule Name cannot be Empty!!!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AddSchedule.this, "Classes cannot be Empty", Toast.LENGTH_SHORT).show();
                 }
             }
         });
+
+//
+//        mAuth = FirebaseAuth.getInstance();
+//        String uid = mAuth.getCurrentUser().getUid();
+//        firebaseManage firebase = new firebaseManage();
+//
+//        int[] daysButtonIds = {
+//                R.id.monday, R.id.tuesday, R.id.wednesday, R.id.thursday,
+//                R.id.friday, R.id.saturday, R.id.sunday
+//        };
+////        HashMap<String, Integer> daysSelected = new HashMap<String, Integer>();
+//        ArrayList<String> daysSelected = new ArrayList<>();
+//
+//        for (int buttonId : daysButtonIds) {
+//            Button dayButton = findViewById(buttonId);
+////            daysSelected.put(String.valueOf(buttonId), 0);
+//            dayButton.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+////                    String clickedId = String.valueOf(dayButton.getId());
+//                    String day = String.valueOf(dayButton.getText());
+//                    if(daysSelected.contains(day)){
+//                        daysSelected.remove(day);
+//                        dayButton.setBackgroundResource(R.drawable.rounded_blue_border_button);
+//                        dayButton.setTextColor(Color.BLACK);
+//                    }else{
+//                        daysSelected.add(day);
+//                        dayButton.setBackgroundResource(R.drawable.rounded_blue_button);
+//                        dayButton.setTextColor(Color.WHITE);
+//                    }
+//
+////                    if (daysSelected.get(String.valueOf(dayButton.getId())).equals(0)) {
+////                        // Change the background to R.drawable.rounded_selected_button
+////                        dayButton.setBackgroundResource(R.drawable.rounded_blue_button);
+////                        daysSelected.replace(String.valueOf(dayButton.getId()), 1);
+////                        dayButton.setTextColor(Color.WHITE);
+////                    } else {
+////                        dayButton.setBackgroundResource(R.drawable.rounded_blue_border_button);
+////                        daysSelected.replace(String.valueOf(dayButton.getId()), 0);
+////                        dayButton.setTextColor(Color.BLACK);
+////
+////                    }
+////                    Log.d("harsh", String.valueOf(daysSelected));
+//                }
+//            });
+//        }
+//
+//
+//        addSchedule.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                String scheduleName = scheduleNameEdittext.getText().toString();
+//                String scheduleDescription = scheduleDescriptionEdittext.getText().toString();
+//                String classesNames = classesNamesEdittext.getText().toString();
+//
+//                List<String> classesList = Arrays.asList(classesNames.split("\\s*,\\s*"));
+//
+//                if(!scheduleName.isEmpty() && !classesNames.isEmpty() && !daysSelected.isEmpty()){
+//                    firebase.addSchedule(uid, scheduleName, scheduleDescription, classesList, daysSelected, new intSuccessCallback() {
+//                        @Override
+//                        public void onCallback(int success) {
+//                            if (success==1){
+//                                Toast.makeText(AddSchedule.this, "Schedule Added Successfully", Toast.LENGTH_SHORT).show();
+//                                finish();
+//                            }else{
+//                                Toast.makeText(AddSchedule.this, "Error Adding Schedule", Toast.LENGTH_SHORT).show();
+//                                finish();
+//                            }
+//                        }
+//                    });
+//                }else{
+//                    Toast.makeText(AddSchedule.this, "Schedule Name cannot be Empty!!!", Toast.LENGTH_SHORT).show();
+//                }
+//            }
+//        });
 
     }
 }

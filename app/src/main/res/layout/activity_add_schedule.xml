@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -12,175 +12,114 @@
         android:layout_height="wrap_content"
         android:elevation="4dp"
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/toolbar"
-        android:gravity="center"
-        android:layout_margin="20dp">
+    <ScrollView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:fillViewport="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar">
 
-        <EditText
-            android:id="@+id/scheduleNameEdittext"
-            android:layout_width="300dp"
-            android:layout_height="wrap_content"
-            android:background="@drawable/rounded_input"
-            android:hint="Schedule Name"
-            android:inputType="text"
-            android:padding="10dp"
-            android:layout_centerHorizontal="true"
-            android:layout_marginVertical="20dp"/>
-
-        <EditText
-            android:id="@+id/scheduleDescriptionEdittext"
-            android:layout_width="300dp"
-            android:layout_height="wrap_content"
-            android:background="@drawable/rounded_input"
-            android:inputType="text"
-            android:hint="Schedule Description (Optional)"
-            android:layout_below="@id/scheduleNameEdittext"
-            android:lines="3"
-            android:textAlignment="textStart"
-            android:padding="10dp"
-            android:layout_centerHorizontal="true"
-            android:layout_marginVertical="20dp"/>
-
-        <EditText
-            android:id="@+id/classesNamesEdittext"
-            android:layout_width="300dp"
-            android:layout_height="wrap_content"
-            android:background="@drawable/rounded_input"
-            android:inputType="text"
-            android:hint="Classes (Comma Separated)"
-            android:layout_below="@id/scheduleDescriptionEdittext"
-            android:lines="3"
-            android:textAlignment="textStart"
-            android:padding="10dp"
-            android:layout_centerHorizontal="true"
-            android:layout_marginVertical="20dp"/>
-
-
-
-        <TableLayout
-            android:id="@+id/daysTableLayout"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/classesNamesEdittext">
+            android:layout_margin="20dp">
 
-            <TableRow
+            <EditText
+                android:id="@+id/scheduleNameEdittext"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/rounded_input"
+                android:hint="Schedule Name"
+                android:inputType="text"
+                android:padding="10dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.1" />
+
+            <EditText
+                android:id="@+id/scheduleDescriptionEdittext"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/rounded_input"
+                android:hint="Schedule Description (Optional)"
+                android:inputType="text"
+                android:lines="3"
+                android:padding="10dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.492"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/scheduleNameEdittext" />
+
+            <LinearLayout
+                android:id="@+id/classesLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center_horizontal">
+                android:layout_marginTop="20dp"
+                android:gravity="center"
+                android:orientation="vertical"
+                app:layout_constraintEnd_toEndOf="@+id/scheduleDescriptionEdittext"
+                app:layout_constraintStart_toStartOf="@+id/scheduleDescriptionEdittext"
+                app:layout_constraintTop_toBottomOf="@+id/scheduleDescriptionEdittext">
 
-                <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/monday"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Monday"
-                    android:textAllCaps="false"
-                    android:layout_marginHorizontal="5dp"
-                    android:layout_marginBottom="20dp"
-                    android:background="@drawable/rounded_blue_border_button"
-                    android:foreground="?attr/selectableItemBackground"
-                    />
-                <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/tuesday"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Tuesday"
-                    android:textAllCaps="false"
-                    android:layout_marginHorizontal="5dp"
-                    android:layout_marginBottom="20dp"
-                    android:background="@drawable/rounded_blue_border_button"
-                    android:foreground="?attr/selectableItemBackground"
-                    />
-                <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/wednesday"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Wednesday"
-                    android:textAllCaps="false"
-                    android:layout_marginHorizontal="5dp"
-                    android:layout_marginBottom="20dp"
-                    android:background="@drawable/rounded_blue_border_button"
-                    android:foreground="?attr/selectableItemBackground"
-                    />
 
-            </TableRow>
-            <TableRow
-                android:layout_width="match_parent"
+                <Spinner
+                    android:id="@+id/daysSpinner"
+                    android:layout_width="300dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="center" />
+
+                <EditText
+                    android:id="@+id/classesNamesEdittext"
+                    android:layout_width="300dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginVertical="20dp"
+                    android:background="@drawable/rounded_input"
+                    android:hint="Classes (Comma Separated)"
+                    android:inputType="text"
+                    android:lines="3"
+                    android:padding="10dp" />
+
+            </LinearLayout>
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/addDay"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center_horizontal">
+                android:layout_marginTop="24dp"
+                android:background="@drawable/rounded_blue_button"
+                android:text="Add Day"
+                android:textAllCaps="true"
+                android:textColor="@color/white"
+                app:layout_constraintEnd_toEndOf="@+id/classesLayout"
+                app:layout_constraintHorizontal_bias="0.872"
+                app:layout_constraintStart_toStartOf="@+id/classesLayout"
+                app:layout_constraintTop_toBottomOf="@+id/classesLayout" />
 
-                <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/thursday"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Thursday"
-                    android:textAllCaps="false"
-                    android:layout_marginHorizontal="5dp"
-                    android:layout_marginBottom="20dp"
-                    android:background="@drawable/rounded_blue_border_button"
-                    android:foreground="?attr/selectableItemBackground"
-                    />
-                <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/friday"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Friday"
-                    android:textAllCaps="false"
-                    android:layout_marginHorizontal="5dp"
-                    android:layout_marginBottom="20dp"
-                    android:background="@drawable/rounded_blue_border_button"
-                    android:foreground="?attr/selectableItemBackground"
-                    />
-                <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/saturday"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Saturday"
-                    android:textAllCaps="false"
-                    android:layout_marginHorizontal="5dp"
-                    android:layout_marginBottom="20dp"
-                    android:background="@drawable/rounded_blue_border_button"
-                    android:foreground="?attr/selectableItemBackground"
-                    />
-
-            </TableRow>
-            <TableRow
-                android:layout_width="match_parent"
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/addSchedule"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center_horizontal">
+                android:layout_marginTop="30dp"
+                android:layout_marginBottom="70dp"
+                android:background="@drawable/rounded_blue_button"
+                android:padding="15dp"
+                android:text="Add Schedule"
+                android:textAllCaps="true"
+                android:textColor="@color/white"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.497"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/addDay"
+                app:layout_constraintVertical_bias="0.034" />
 
-                <androidx.appcompat.widget.AppCompatButton
-                    android:id="@+id/sunday"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Sunday"
-                    android:textAllCaps="false"
-                    android:layout_marginHorizontal="5dp"
-                    android:layout_marginBottom="20dp"
-                    android:background="@drawable/rounded_blue_border_button"
-                    android:foreground="?attr/selectableItemBackground"
-                    />
-
-            </TableRow>
-
-        </TableLayout>
-
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/addSchedule"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/rounded_blue_button"
-            android:text="Add Schedule"
-            android:padding="15dp"
-            android:layout_below="@id/daysTableLayout"
-            android:textAllCaps="true"
-            android:layout_centerHorizontal="true"
-            android:textColor="@color/white"
-            android:layout_marginVertical="20dp"/>
-
-    </RelativeLayout>
-</RelativeLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+</androidx.constraintlayout.widget.ConstraintLayout>
