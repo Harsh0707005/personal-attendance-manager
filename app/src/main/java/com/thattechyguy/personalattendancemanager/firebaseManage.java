@@ -76,6 +76,13 @@ public class firebaseManage {
         metaData.put("attended", "0");
         metaData.put("total", "0");
         metaData.put("timestamp", ServerValue.TIMESTAMP);
+        String classUniqueId = mDatabase.child(uid).child(uniqueId).push().getKey();
+        HashMap<String, Object> data = new HashMap<>();
+        data.put("day", "Thursday");
+        data.put("date", "01022024");
+        data.put("attended", 0);
+        data.put("total", 1);
+        metaData.put(classUniqueId, data);
 
         mDatabase.child(uid).child(uniqueId).setValue(metaData).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
@@ -101,12 +108,14 @@ public class firebaseManage {
                     HashMap<String, Object> item = new HashMap<String, Object>();
                     if (scheduleSnapshot.hasChildren()) {
 //                        Log.d("harsh", scheduleSnapshot.getKey());
-                        if(scheduleSnapshot.getKey().equals("days") || scheduleSnapshot.getKey().equals("classes")){
+                        if(scheduleSnapshot.getKey().equals("dailyClasses")){
                             item.put(scheduleSnapshot.getKey(), scheduleSnapshot.getValue());
                             classesData.add(item);
                             continue;
                         }
                         item.put("uniqueClassId", scheduleSnapshot.getKey());
+                        item.put("date", scheduleSnapshot.child("date").getValue());
+                        item.put("day", scheduleSnapshot.child("day").getValue());
                         item.put("numAttended", scheduleSnapshot.child("attended").getValue());
                         item.put("numTotal", scheduleSnapshot.child("total").getValue());
 

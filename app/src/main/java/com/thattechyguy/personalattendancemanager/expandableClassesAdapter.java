@@ -1,20 +1,27 @@
 package com.thattechyguy.personalattendancemanager;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.TextView;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 public class expandableClassesAdapter extends BaseExpandableListAdapter {
     private Context context;
+    private ArrayList<HashMap<String, Object>> classesData;
 
-    public expandableClassesAdapter(Context context){
+    public expandableClassesAdapter(Context context, ArrayList<HashMap<String, Object>> classesData){
         this.context = context;
+        this.classesData = classesData;
     }
     @Override
     public int getGroupCount() {
-        return 0;
+        return this.classesData.size();
     }
 
     @Override
@@ -23,8 +30,8 @@ public class expandableClassesAdapter extends BaseExpandableListAdapter {
     }
 
     @Override
-    public Object getGroup(int groupPosition) {
-        return null;
+    public HashMap<String, Object> getGroup(int groupPosition) {
+        return this.classesData.get(groupPosition);
     }
 
     @Override
@@ -34,7 +41,7 @@ public class expandableClassesAdapter extends BaseExpandableListAdapter {
 
     @Override
     public long getGroupId(int groupPosition) {
-        return 0;
+        return groupPosition;
     }
 
     @Override
@@ -52,6 +59,12 @@ public class expandableClassesAdapter extends BaseExpandableListAdapter {
         if (convertView == null){
             LayoutInflater inflater = (LayoutInflater)this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = inflater.inflate(R.layout.class_title, null);
+        }
+        TextView day = convertView.findViewById(R.id.day);
+        try{
+            day.setText(getGroup(groupPosition).get("day").toString());
+        }catch(Exception e){
+            Log.d("harsh", e.getMessage());
         }
 
         return convertView;

@@ -31,11 +31,17 @@ public class classes extends AppCompatActivity {
         firebase.getClassData(path, new ArraylistHashMapCallback() {
             @Override
             public void onCallback(ArrayList<HashMap<String, Object>> data) {
-                Log.d("harsh", String.valueOf(data));
+                ArrayList<HashMap<String, Object>> dataList = new ArrayList<>();
+                for(HashMap<String, Object> item:data){
+                    if (!item.containsKey("dailyClasses")){
+                        dataList.add(item);
+                    }
+                }
+                expandableClassesAdapter = new expandableClassesAdapter(classes.this, dataList);
+                expandableClasses.setAdapter(expandableClassesAdapter);
+//                Log.d("harsh", String.valueOf(data));
             }
         });
 
-        expandableClassesAdapter = new expandableClassesAdapter(this);
-        expandableClasses.setAdapter(expandableClassesAdapter);
     }
 }
