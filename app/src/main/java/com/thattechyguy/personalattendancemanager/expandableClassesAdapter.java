@@ -102,6 +102,8 @@ public class expandableClassesAdapter extends BaseExpandableListAdapter {
             convertView = inflater.inflate(R.layout.class_data, null);
         }
 
+        attendedClasses = new ArrayList<String>();
+
         LinearLayout classesLayout = convertView.findViewById(R.id.classesLayout);
 
         Button holidayBtn = convertView.findViewById(R.id.holidayBtn);
@@ -159,8 +161,6 @@ public class expandableClassesAdapter extends BaseExpandableListAdapter {
         classesLayout.removeAllViews();
 
         ArrayList<Integer> buttonIds = new ArrayList<Integer>();
-
-        attendedClasses = new ArrayList<String>();
 
         try{
             for (String className: classes) {
