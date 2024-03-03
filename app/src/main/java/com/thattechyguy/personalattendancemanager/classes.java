@@ -40,7 +40,7 @@ public class classes extends AppCompatActivity {
                         dataList.add(item);
                     }
                 }
-                expandableClassesAdapter = new expandableClassesAdapter(classes.this, dataList);
+                expandableClassesAdapter = new expandableClassesAdapter(classes.this, dataList, path);
                 expandableClasses.setAdapter(expandableClassesAdapter);
 //                Log.d("harsh", String.valueOf(data));
             }

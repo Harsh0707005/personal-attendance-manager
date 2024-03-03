@@ -12,6 +12,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.thattechyguy.personalattendancemanager.Interfaces.intSuccessCallback;
+
 import java.text.DateFormatSymbols;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -27,10 +29,15 @@ public class expandableClassesAdapter extends BaseExpandableListAdapter {
     private Context context;
     private ArrayList<HashMap<String, Object>> classesData;
     private ArrayList<String> attendedClasses;
+    private firebaseManage firebase;
+    private String path;
 
-    public expandableClassesAdapter(Context context, ArrayList<HashMap<String, Object>> classesData){
+    public expandableClassesAdapter(Context context, ArrayList<HashMap<String, Object>> classesData, String path){
         this.context = context;
         this.classesData = classesData;
+        this.path = path;
+
+        firebase = new firebaseManage();
     }
     @Override
     public int getGroupCount() {
@@ -94,15 +101,19 @@ public class expandableClassesAdapter extends BaseExpandableListAdapter {
     public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
 
         ArrayList<String> classes = getChild(groupPosition, childPosition);
-
 //        Log.d("harsh", String.valueOf(classes));
+
+        attendedClasses = (ArrayList<String>) getGroup(groupPosition).get("attendedClasses");
+
+        if (attendedClasses==null){
+            attendedClasses = new ArrayList<String>();
+        }
+//        Log.d("harsh", String.valueOf(attendedClasses));
 
         if (convertView == null){
             LayoutInflater inflater = (LayoutInflater)this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = inflater.inflate(R.layout.class_data, null);
         }
-
-        attendedClasses = new ArrayList<String>();
 
         LinearLayout classesLayout = convertView.findViewById(R.id.classesLayout);
 
@@ -110,6 +121,7 @@ public class expandableClassesAdapter extends BaseExpandableListAdapter {
         final boolean[] holiday = {false};
         Button absentBtn = convertView.findViewById(R.id.absentBtn);
         final boolean[] absent = {false};
+        Button updateBtn = convertView.findViewById(R.id.updateBtn);
 
         holidayBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -157,6 +169,17 @@ public class expandableClassesAdapter extends BaseExpandableListAdapter {
             }
         });
 
+        updateBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                firebase.updateClassData(path + getGroup(groupPosition).get("uniqueClassId").toString(), attendedClasses, holiday[0], absent[0], new intSuccessCallback() {
+                    @Override
+                    public void onCallback(int success) {
+                    }
+                });
+            }
+        });
+
 
         classesLayout.removeAllViews();
 
@@ -170,6 +193,10 @@ public class expandableClassesAdapter extends BaseExpandableListAdapter {
                 int id = View.generateViewId();
                 button.setId(id);
                 buttonIds.add(id);
+
+                if (attendedClasses.contains(className.toString())){
+                    selectButton(button);
+                }
 
                 button.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -230,9 +257,10 @@ public class expandableClassesAdapter extends BaseExpandableListAdapter {
         }
     }
     public String convertToDate(String input) {
-        SimpleDateFormat sdfInput = new SimpleDateFormat("ddMMyyyy", Locale.ENGLISH);
-        SimpleDateFormat sdfOutput = new SimpleDateFormat("d MMMM yyyy", Locale.ENGLISH);
+
         try {
+            SimpleDateFormat sdfInput = new SimpleDateFormat("ddMMyyyy", Locale.ENGLISH);
+            SimpleDateFormat sdfOutput = new SimpleDateFormat("d MMMM yyyy", Locale.ENGLISH);
             Date date = sdfInput.parse(input);
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(date);
@@ -240,8 +268,8 @@ public class expandableClassesAdapter extends BaseExpandableListAdapter {
             int month = calendar.get(Calendar.MONTH);
             int year = calendar.get(Calendar.YEAR);
             return day + " " + new DateFormatSymbols().getMonths()[month - 1] + " " + year;
-        } catch (ParseException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            Log.d("harsh", e.getMessage());
             return null;
         }
     }

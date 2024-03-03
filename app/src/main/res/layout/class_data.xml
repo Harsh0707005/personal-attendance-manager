@@ -71,6 +71,20 @@
 
             </LinearLayout>
 
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/updateBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Update"
+                android:textAllCaps="false"
+                android:layout_marginHorizontal="10dp"
+                android:layout_below="@id/classesLayout"
+                android:background="@drawable/rounded_light_blue_button"
+                android:textColor="@color/white"
+                android:layout_alignParentRight="true"
+                android:foreground="?attr/selectableItemBackground"
+                />
+
         </RelativeLayout>
 
     </androidx.cardview.widget.CardView>

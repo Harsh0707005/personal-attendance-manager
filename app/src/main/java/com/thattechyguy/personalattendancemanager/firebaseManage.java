@@ -1,6 +1,7 @@
 package com.thattechyguy.personalattendancemanager;
 
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
@@ -116,9 +117,10 @@ public class firebaseManage {
                         item.put("uniqueClassId", scheduleSnapshot.getKey());
                         item.put("date", scheduleSnapshot.child("date").getValue());
                         item.put("day", scheduleSnapshot.child("day").getValue());
-                        item.put("numAttended", scheduleSnapshot.child("attended").getValue());
-                        item.put("numTotal", scheduleSnapshot.child("total").getValue());
+                        item.put("numAttended", scheduleSnapshot.child("numAttended").getValue());
+                        item.put("numTotal", scheduleSnapshot.child("numTotal").getValue());
                         item.put("totalClasses", scheduleSnapshot.child("totalClasses").getValue());
+                        item.put("attendedClasses", scheduleSnapshot.child("attendedClasses").getValue());
 
                         classesData.add(item);
                     }
@@ -132,6 +134,26 @@ public class firebaseManage {
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 Log.d("harsh", "Error fetching data");
+            }
+        });
+    }
+    public void updateClassData(String path, ArrayList<String> updatedAttendance, boolean holiday, boolean absent, intSuccessCallback myCallback){
+        DatabaseReference loc = firebaseDatabase.getReference(path);
+
+        HashMap<String, Object> data = new HashMap<>();
+        data.put("attendedClasses", updatedAttendance);
+        data.put("holiday", holiday);
+        data.put("absent", absent);
+
+        loc.updateChildren(data).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()){
+                    myCallback.onCallback(1);
+                }else{
+                    Log.d("harsh", "Error while updating");
+                    myCallback.onCallback(0);
+                }
             }
         });
     }
