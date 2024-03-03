@@ -1,6 +1,7 @@
 package com.thattechyguy.personalattendancemanager;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +10,7 @@ import android.widget.BaseExpandableListAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.text.DateFormatSymbols;
 import java.text.ParseException;
@@ -98,7 +100,52 @@ public class expandableClassesAdapter extends BaseExpandableListAdapter {
             LayoutInflater inflater = (LayoutInflater)this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = inflater.inflate(R.layout.class_data, null);
         }
+
         LinearLayout classesLayout = convertView.findViewById(R.id.classesLayout);
+
+        Button holidayBtn = convertView.findViewById(R.id.holidayBtn);
+        final boolean[] holiday = {false};
+        Button absentBtn = convertView.findViewById(R.id.absentBtn);
+        final boolean[] absent = {false};
+
+        holidayBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                absent[0] = unselectButton(absentBtn);
+
+                if (holiday[0]){
+                    holiday[0] = unselectButton(holidayBtn);
+
+                    enableClassesLayout(classesLayout);
+                }else{
+                    holiday[0] = selectButton(holidayBtn);
+
+                    disableClassesLayout(classesLayout);
+                }
+            }
+        });
+
+        absentBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                holiday[0] = unselectButton(holidayBtn);
+
+                if (absent[0]){
+                    absent[0] = unselectButton(absentBtn);
+
+                    enableClassesLayout(classesLayout);
+                }else{
+                    absent[0] = selectButton(absentBtn);
+
+                    absentBtn.setBackgroundResource(R.drawable.rounded_blue_button);
+                    absentBtn.setTextColor(Color.WHITE);
+                    absent[0] = true;
+
+                    disableClassesLayout(classesLayout);
+                }
+            }
+        });
+
 
         classesLayout.removeAllViews();
 
@@ -106,7 +153,7 @@ public class expandableClassesAdapter extends BaseExpandableListAdapter {
 
         try{
             for (String className: classes) {
-                Log.d("harsh", className);
+//                Log.d("harsh", className);
                 View view = LayoutInflater.from(context).inflate(R.layout.classes_button, null);
                 Button button = view.findViewById(R.id.classNameBtn);
                 button.setText(className.toString());
@@ -114,6 +161,13 @@ public class expandableClassesAdapter extends BaseExpandableListAdapter {
                 button.setId(id);
                 buttonIds.add(id);
 
+                button.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Toast.makeText(context, "nfjdsc", Toast.LENGTH_SHORT).show();
+                    }
+                });
+                
                 classesLayout.addView(view);
             }
         }catch(Exception e){
@@ -128,6 +182,29 @@ public class expandableClassesAdapter extends BaseExpandableListAdapter {
         return false;
     }
 
+    private boolean selectButton(Button button){
+        button.setBackgroundResource(R.drawable.rounded_blue_button);
+        button.setTextColor(Color.WHITE);
+        return true;
+    }
+    private boolean unselectButton(Button button){
+        button.setBackgroundResource(R.drawable.rounded_blue_border_button);
+        button.setTextColor(Color.BLACK);
+        return false;
+    }
+
+    private void disableClassesLayout(LinearLayout layout){
+        for ( int i = 0; i < layout.getChildCount();  i++ ){
+            View view = layout.getChildAt(i);
+            view.setEnabled(false);
+        }
+    }
+    private void enableClassesLayout(LinearLayout layout){
+        for ( int i = 0; i < layout.getChildCount();  i++ ){
+            View view = layout.getChildAt(i);
+            view.setEnabled(true);
+        }
+    }
     public String convertToDate(String input) {
         SimpleDateFormat sdfInput = new SimpleDateFormat("ddMMyyyy", Locale.ENGLISH);
         SimpleDateFormat sdfOutput = new SimpleDateFormat("d MMMM yyyy", Locale.ENGLISH);
