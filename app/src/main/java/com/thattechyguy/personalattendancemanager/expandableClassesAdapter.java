@@ -26,6 +26,7 @@ import java.util.HashMap;
 public class expandableClassesAdapter extends BaseExpandableListAdapter {
     private Context context;
     private ArrayList<HashMap<String, Object>> classesData;
+    private ArrayList<String> attendedClasses;
 
     public expandableClassesAdapter(Context context, ArrayList<HashMap<String, Object>> classesData){
         this.context = context;
@@ -113,6 +114,10 @@ public class expandableClassesAdapter extends BaseExpandableListAdapter {
             public void onClick(View v) {
                 absent[0] = unselectButton(absentBtn);
 
+                attendedClasses.clear();
+
+                unselectButtonLayout(classesLayout);
+
                 if (holiday[0]){
                     holiday[0] = unselectButton(holidayBtn);
 
@@ -129,6 +134,10 @@ public class expandableClassesAdapter extends BaseExpandableListAdapter {
             @Override
             public void onClick(View v) {
                 holiday[0] = unselectButton(holidayBtn);
+
+                attendedClasses.clear();
+
+                unselectButtonLayout(classesLayout);
 
                 if (absent[0]){
                     absent[0] = unselectButton(absentBtn);
@@ -149,11 +158,12 @@ public class expandableClassesAdapter extends BaseExpandableListAdapter {
 
         classesLayout.removeAllViews();
 
-        ArrayList<Integer> buttonIds = new ArrayList<>();
+        ArrayList<Integer> buttonIds = new ArrayList<Integer>();
+
+        attendedClasses = new ArrayList<String>();
 
         try{
             for (String className: classes) {
-//                Log.d("harsh", className);
                 View view = LayoutInflater.from(context).inflate(R.layout.classes_button, null);
                 Button button = view.findViewById(R.id.classNameBtn);
                 button.setText(className.toString());
@@ -164,7 +174,14 @@ public class expandableClassesAdapter extends BaseExpandableListAdapter {
                 button.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Toast.makeText(context, "nfjdsc", Toast.LENGTH_SHORT).show();
+                        String text = button.getText().toString();
+                        if (attendedClasses.contains(text)){
+                            attendedClasses.remove(text);
+                            unselectButton(button);
+                        }else {
+                            attendedClasses.add(text);
+                            selectButton(button);
+                        }
                     }
                 });
                 
@@ -191,6 +208,13 @@ public class expandableClassesAdapter extends BaseExpandableListAdapter {
         button.setBackgroundResource(R.drawable.rounded_blue_border_button);
         button.setTextColor(Color.BLACK);
         return false;
+    }
+    private void unselectButtonLayout(LinearLayout layout){
+        for ( int i = 0; i < layout.getChildCount();  i++ ){
+            Button button = (Button) layout.getChildAt(i);
+            button.setBackgroundResource(R.drawable.rounded_blue_border_button);
+            button.setTextColor(Color.BLACK);
+        }
     }
 
     private void disableClassesLayout(LinearLayout layout){
