@@ -118,6 +118,7 @@ public class firebaseManage {
                         item.put("day", scheduleSnapshot.child("day").getValue());
                         item.put("numAttended", scheduleSnapshot.child("attended").getValue());
                         item.put("numTotal", scheduleSnapshot.child("total").getValue());
+                        item.put("totalClasses", scheduleSnapshot.child("totalClasses").getValue());
 
                         classesData.add(item);
                     }

@@ -31,8 +31,11 @@ public class classes extends AppCompatActivity {
         firebase.getClassData(path, new ArraylistHashMapCallback() {
             @Override
             public void onCallback(ArrayList<HashMap<String, Object>> data) {
+                ArrayList<HashMap<String, Object>> classDays = new ArrayList<HashMap<String, Object>>();
                 ArrayList<HashMap<String, Object>> dataList = new ArrayList<>();
+//                Log.d("harsh", String.valueOf(data));
                 for(HashMap<String, Object> item:data){
+//                        Log.d("harsh", String.valueOf(item));
                     if (!item.containsKey("dailyClasses")){
                         dataList.add(item);
                     }
@@ -42,6 +45,5 @@ public class classes extends AppCompatActivity {
 //                Log.d("harsh", String.valueOf(data));
             }
         });
-
     }
 }

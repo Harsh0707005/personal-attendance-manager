@@ -6,11 +6,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.text.DateFormatSymbols;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -33,7 +36,7 @@ public class expandableClassesAdapter extends BaseExpandableListAdapter {
 
     @Override
     public int getChildrenCount(int groupPosition) {
-        return 0;
+        return 1;
     }
 
     @Override
@@ -42,8 +45,8 @@ public class expandableClassesAdapter extends BaseExpandableListAdapter {
     }
 
     @Override
-    public Object getChild(int groupPosition, int childPosition) {
-        return null;
+    public ArrayList<String> getChild(int groupPosition, int childPosition) {
+        return (ArrayList<String>) this.classesData.get(groupPosition).get("totalClasses");
     }
 
     @Override
@@ -53,7 +56,7 @@ public class expandableClassesAdapter extends BaseExpandableListAdapter {
 
     @Override
     public long getChildId(int groupPosition, int childPosition) {
-        return 0;
+        return childPosition;
     }
 
     @Override
@@ -63,6 +66,7 @@ public class expandableClassesAdapter extends BaseExpandableListAdapter {
 
     @Override
     public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
+
         if (convertView == null){
             LayoutInflater inflater = (LayoutInflater)this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = inflater.inflate(R.layout.class_title, null);
@@ -85,10 +89,37 @@ public class expandableClassesAdapter extends BaseExpandableListAdapter {
 
     @Override
     public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
+
+        ArrayList<String> classes = getChild(groupPosition, childPosition);
+
+//        Log.d("harsh", String.valueOf(classes));
+
         if (convertView == null){
             LayoutInflater inflater = (LayoutInflater)this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = inflater.inflate(R.layout.class_data, null);
         }
+        LinearLayout classesLayout = convertView.findViewById(R.id.classesLayout);
+
+        classesLayout.removeAllViews();
+
+        ArrayList<Integer> buttonIds = new ArrayList<>();
+
+        try{
+            for (String className: classes) {
+                Log.d("harsh", className);
+                View view = LayoutInflater.from(context).inflate(R.layout.classes_button, null);
+                Button button = view.findViewById(R.id.classNameBtn);
+                button.setText(className.toString());
+                int id = View.generateViewId();
+                button.setId(id);
+                buttonIds.add(id);
+
+                classesLayout.addView(view);
+            }
+        }catch(Exception e){
+            Log.d("harsh", e.getMessage());
+        }
+
         return convertView;
     }
 

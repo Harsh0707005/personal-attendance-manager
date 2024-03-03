@@ -8,76 +8,68 @@
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="40dp"
+        android:layout_marginHorizontal="40dp"
+        android:layout_marginBottom="10dp"
         app:cardCornerRadius="20dp"
         android:elevation="10dp">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="20dp">
+            android:padding="20dp"
+            android:gravity="center">
 
             <LinearLayout
-                android:id="@+id/titleLayout"
-                android:layout_width="match_parent"
+                android:id="@+id/holablayout"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:gravity="center">
+                android:layout_centerHorizontal="true">
 
-                <TextView
-                    android:id="@+id/date"
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/holidayBtn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Date"
-                    android:textStyle="bold"
-                    android:layout_marginVertical="10dp"
-                    android:layout_marginHorizontal="5dp"
-                    android:textColor="@color/black"
-                    android:textSize="20sp"/>
+                    android:text="Holiday"
+                    android:textAllCaps="false"
+                    android:background="@drawable/rounded_blue_border_button"
+                    android:foreground="?attr/selectableItemBackground"
+                    />
 
-                <TextView
-                    android:id="@+id/separator"
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/absentBtn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="|"
-                    android:textStyle="bold"
-                    android:layout_marginVertical="10dp"
-                    android:layout_marginHorizontal="5dp"
-                    android:textColor="@color/black"
-                    android:textSize="20sp"/>
-
-                <TextView
-                    android:id="@+id/day"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Day"
-                    android:textStyle="bold"
-                    android:layout_margin="10dp"
-                    android:textColor="@color/black"
-                    android:textSize="20sp"/>
+                    android:text="Absent"
+                    android:textAllCaps="false"
+                    android:layout_marginHorizontal="10dp"
+                    android:layout_toEndOf="@id/holidayBtn"
+                    android:layout_alignBaseline="@id/holidayBtn"
+                    android:background="@drawable/rounded_blue_border_button"
+                    android:foreground="?attr/selectableItemBackground"
+                    />
 
             </LinearLayout>
 
-            <TextView
-                android:id="@+id/numAttended"
-                android:layout_width="wrap_content"
+            <View
+                android:id="@+id/line"
+                android:layout_width="250dp"
+                android:layout_height="2dp"
+                android:layout_marginTop="20dp"
+                android:layout_below="@id/holablayout"
+                android:background="@color/light_gray"
+                android:layout_centerHorizontal="true"/>
+            
+            <LinearLayout
+                android:id="@+id/classesLayout"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/titleLayout"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="5dp"
-                android:layout_marginBottom="5dp"
-                android:text="Attended:"
-                android:textColor="@color/black" />
+                android:layout_below="@id/line"
+                android:layout_marginVertical="15dp"
+                android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/numTotal"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Total:"
-                android:layout_marginEnd="20dp"
-                android:textColor="@color/black"
-                android:layout_below="@id/titleLayout"
-                android:layout_alignParentEnd="true" />
+
+            </LinearLayout>
 
         </RelativeLayout>
 
