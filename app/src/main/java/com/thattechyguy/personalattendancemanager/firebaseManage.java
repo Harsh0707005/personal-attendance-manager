@@ -121,6 +121,8 @@ public class firebaseManage {
                         item.put("numTotal", scheduleSnapshot.child("numTotal").getValue());
                         item.put("totalClasses", scheduleSnapshot.child("totalClasses").getValue());
                         item.put("attendedClasses", scheduleSnapshot.child("attendedClasses").getValue());
+                        item.put("holiday", scheduleSnapshot.child("holiday").getValue());
+                        item.put("absent", scheduleSnapshot.child("absent").getValue());
 
                         classesData.add(item);
                     }

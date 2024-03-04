@@ -102,6 +102,8 @@ public class expandableClassesAdapter extends BaseExpandableListAdapter {
 
         ArrayList<String> classes = getChild(groupPosition, childPosition);
 //        Log.d("harsh", String.valueOf(classes));
+//        Log.d("harsh", String.valueOf(getGroup(groupPosition)));
+        HashMap<String, Object> group = getGroup(groupPosition);
 
         attendedClasses = (ArrayList<String>) getGroup(groupPosition).get("attendedClasses");
 
@@ -216,6 +218,14 @@ public class expandableClassesAdapter extends BaseExpandableListAdapter {
             }
         }catch(Exception e){
             Log.d("harsh", e.getMessage());
+        }
+
+        if (group.get("holiday").equals(true)){
+            holiday[0] = selectButton(holidayBtn);
+            disableClassesLayout(classesLayout);
+        } else if (group.get("absent").equals(true)) {
+            absent[0] = selectButton(absentBtn);
+            disableClassesLayout(classesLayout);
         }
 
         return convertView;
