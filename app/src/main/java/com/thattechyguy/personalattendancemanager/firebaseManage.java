@@ -77,8 +77,12 @@ public class firebaseManage {
         metaData.put("attended", "0");
         metaData.put("total", "0");
         metaData.put("timestamp", ServerValue.TIMESTAMP);
+
         String classUniqueId = mDatabase.child(uid).child(uniqueId).push().getKey();
+
+        // TODO: Change this to today's date and data
         HashMap<String, Object> data = new HashMap<>();
+
         data.put("day", "Thursday");
         data.put("date", "01022024");
         data.put("attended", 0);
@@ -139,8 +143,16 @@ public class firebaseManage {
             }
         });
     }
-    public void updateClassData(String path, ArrayList<String> updatedAttendance, ArrayList<String> totalClasses, boolean holiday, boolean absent, intSuccessCallback myCallback){
+    public void updateClassData(String path, HashMap<String, Object> initialAttendance, ArrayList<String> updatedAttendance, ArrayList<String> totalClasses, boolean holiday, boolean absent, intSuccessCallback myCallback){
         DatabaseReference loc = firebaseDatabase.getReference(path);
+
+//        try{
+//            Log.d("harsh", String.valueOf(((ArrayList<String>) initialAttendance.get("attendedClasses"))==null));
+//            Log.d("harsh", String.valueOf(initialAttendance.get("attendedClasses").toString().equals(null)));
+//
+//        }catch(Exception e){
+//            Log.d("harsh", e.getMessage());
+//        }
 
         HashMap<String, Object> data = new HashMap<>();
         data.put("attendedClasses", updatedAttendance);
@@ -161,6 +173,34 @@ public class firebaseManage {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()){
+                    HashMap<String, Object> item = new HashMap<String, Object>();
+
+                    if (initialAttendance.get("holiday").toString().equals("false") && initialAttendance.get("absent").toString().equals("false") && ((ArrayList<String>) initialAttendance.get("attendedClasses"))==null){
+                        item.put("total", ServerValue.increment(totalClasses.size()));
+                    } else if (!holiday && !absent && updatedAttendance.size()==0) {
+                        item.put("attended", ServerValue.increment(updatedAttendance.size()- ((Long) initialAttendance.get("numAttended"))));
+                        item.put("total", ServerValue.increment(-totalClasses.size()));
+                    }
+                    else if (holiday && !initialAttendance.get("numAttended").toString().equals("0")){
+                        item.put("attended", ServerValue.increment(-((Long) initialAttendance.get("numAttended"))));
+                        item.put("total", ServerValue.increment(-totalClasses.size()));
+                    } else if (absent) {
+                        if (initialAttendance.get("holiday").toString().equals("true")){
+                            item.put("total", ServerValue.increment(totalClasses.size()));
+                        }else{
+                            item.put("attended", ServerValue.increment(-((Long) initialAttendance.get("numAttended"))));
+                        }
+                    }else {
+                        item.put("attended", ServerValue.increment(updatedAttendance.size()- ((Long) initialAttendance.get("numAttended"))));
+//                        item.put("total", ServerValue.increment(totalClasses.size()));
+                    }
+                    loc.getParent().updateChildren(item).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+
+                            myCallback.onCallback(1);
+                        }
+                    });
                     myCallback.onCallback(1);
                 }else{
                     Log.d("harsh", "Error while updating");

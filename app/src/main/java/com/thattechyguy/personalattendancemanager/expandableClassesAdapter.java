@@ -176,7 +176,7 @@ public class expandableClassesAdapter extends BaseExpandableListAdapter {
         updateBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                firebase.updateClassData(path + getGroup(groupPosition).get("uniqueClassId").toString(), attendedClasses, classes, holiday[0], absent[0], new intSuccessCallback() {
+                firebase.updateClassData(path + getGroup(groupPosition).get("uniqueClassId").toString(), group, attendedClasses, classes, holiday[0], absent[0], new intSuccessCallback() {
                     @Override
                     public void onCallback(int success) {
                         if (success==1){
