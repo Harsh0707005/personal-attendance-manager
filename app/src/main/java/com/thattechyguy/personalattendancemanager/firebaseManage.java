@@ -139,13 +139,23 @@ public class firebaseManage {
             }
         });
     }
-    public void updateClassData(String path, ArrayList<String> updatedAttendance, boolean holiday, boolean absent, intSuccessCallback myCallback){
+    public void updateClassData(String path, ArrayList<String> updatedAttendance, ArrayList<String> totalClasses, boolean holiday, boolean absent, intSuccessCallback myCallback){
         DatabaseReference loc = firebaseDatabase.getReference(path);
 
         HashMap<String, Object> data = new HashMap<>();
         data.put("attendedClasses", updatedAttendance);
         data.put("holiday", holiday);
         data.put("absent", absent);
+        if (holiday){
+            data.put("numAttended", 0);
+            data.put("numTotal", 0);
+        }else if (absent){
+            data.put("numAttended", 0);
+            data.put("numTotal", totalClasses.size());
+        }else{
+            data.put("numAttended", updatedAttendance.size());
+            data.put("numTotal", totalClasses.size());
+        }
 
         loc.updateChildren(data).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override

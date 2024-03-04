@@ -12,6 +12,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.core.content.ContextCompat;
+
 import com.thattechyguy.personalattendancemanager.Interfaces.intSuccessCallback;
 
 import java.text.DateFormatSymbols;
@@ -174,9 +176,12 @@ public class expandableClassesAdapter extends BaseExpandableListAdapter {
         updateBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                firebase.updateClassData(path + getGroup(groupPosition).get("uniqueClassId").toString(), attendedClasses, holiday[0], absent[0], new intSuccessCallback() {
+                firebase.updateClassData(path + getGroup(groupPosition).get("uniqueClassId").toString(), attendedClasses, classes, holiday[0], absent[0], new intSuccessCallback() {
                     @Override
                     public void onCallback(int success) {
+                        if (success==1){
+                            Toast.makeText(context, "Updated Successfully!!!", Toast.LENGTH_SHORT).show();
+                        }
                     }
                 });
             }
@@ -256,13 +261,17 @@ public class expandableClassesAdapter extends BaseExpandableListAdapter {
 
     private void disableClassesLayout(LinearLayout layout){
         for ( int i = 0; i < layout.getChildCount();  i++ ){
-            View view = layout.getChildAt(i);
+            Button view = (Button) layout.getChildAt(i);
+            view.setBackgroundResource(R.drawable.rounded_disable_button);
+            view.setTextColor(ContextCompat.getColor(context, R.color.gray));
             view.setEnabled(false);
         }
     }
     private void enableClassesLayout(LinearLayout layout){
         for ( int i = 0; i < layout.getChildCount();  i++ ){
-            View view = layout.getChildAt(i);
+            Button view = (Button) layout.getChildAt(i);
+            view.setBackgroundResource(R.drawable.rounded_blue_border_button);
+            view.setTextColor(ContextCompat.getColor(context, R.color.black));
             view.setEnabled(true);
         }
     }
