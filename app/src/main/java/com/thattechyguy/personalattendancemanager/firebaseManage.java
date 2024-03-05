@@ -122,6 +122,7 @@ public class firebaseManage {
                         item.put("attendedClasses", scheduleSnapshot.child("attendedClasses").getValue());
                         item.put("holiday", scheduleSnapshot.child("holiday").getValue());
                         item.put("absent", scheduleSnapshot.child("absent").getValue());
+                        item.put("marked", scheduleSnapshot.child("marked").getValue());
 
                         classesData.add(item);
                     }
@@ -154,6 +155,11 @@ public class firebaseManage {
         }else{
             data.put("numAttended", updatedAttendance.size());
             data.put("numTotal", totalClasses.size());
+        }
+        if (!holiday && !absent && updatedAttendance.size()==0){
+            data.put("marked", false);
+        }else{
+            data.put("marked", true);
         }
 
         loc.updateChildren(data).addOnCompleteListener(new OnCompleteListener<Void>() {

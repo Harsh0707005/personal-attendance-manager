@@ -94,6 +94,11 @@ public class expandableClassesAdapter extends BaseExpandableListAdapter {
             day.setText(getGroup(groupPosition).get("day").toString());
             numAttended.setText("Attended: " + getGroup(groupPosition).get("numAttended").toString());
             numTotal.setText("Total: " + getGroup(groupPosition).get("numTotal").toString());
+            if (getGroup(groupPosition).get("marked").toString().equals("true")){
+                markedIcon.setVisibility(View.VISIBLE);
+            }else {
+                markedIcon.setVisibility(View.GONE);
+            }
         }catch(Exception e){
             Log.d("harsh", e.getMessage());
         }
