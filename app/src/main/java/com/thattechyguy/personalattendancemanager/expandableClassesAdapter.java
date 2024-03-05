@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -87,6 +88,7 @@ public class expandableClassesAdapter extends BaseExpandableListAdapter {
         TextView day = convertView.findViewById(R.id.day);
         TextView numAttended = convertView.findViewById(R.id.numAttended);
         TextView numTotal = convertView.findViewById(R.id.numTotal);
+        ImageView markedIcon = convertView.findViewById(R.id.markedIcon);
         try{
             date.setText(convertToDate(getGroup(groupPosition).get("date").toString()));
             day.setText(getGroup(groupPosition).get("day").toString());

@@ -1,7 +1,6 @@
 package com.thattechyguy.personalattendancemanager;
 
 import android.util.Log;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
@@ -18,10 +17,8 @@ import com.thattechyguy.personalattendancemanager.Interfaces.ArraylistHashMapCal
 import com.thattechyguy.personalattendancemanager.Interfaces.intSuccessCallback;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 
 public class firebaseManage {
     private DatabaseReference mDatabase;
@@ -41,7 +38,7 @@ public class firebaseManage {
         query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                ArrayList<HashMap<String, Object>> scheduleMetaData = new ArrayList<HashMap<String, Object>>();
+                ArrayList<HashMap<String, Object>> scheduleMetaData = new ArrayList<>();
                 for (DataSnapshot scheduleSnapshot: snapshot.getChildren()){
                     HashMap<String, Object> item = new HashMap<String, Object>();
                     item.put("uniqueId", scheduleSnapshot.getKey());
@@ -71,8 +68,6 @@ public class firebaseManage {
         HashMap<String, Object> metaData = new HashMap<>();
         metaData.put("Name", scheduleName);
         metaData.put("description", scheduleDescription);
-//        metaData.put("classes", classesList);
-//        metaData.put("days", daysSelected);
         metaData.put("dailyClasses", classes);
         metaData.put("attended", "0");
         metaData.put("total", "0");
