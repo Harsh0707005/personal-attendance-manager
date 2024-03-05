@@ -155,34 +155,38 @@ public class AddSchedule extends AppCompatActivity {
         addSchedule.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String scheduleName = scheduleNameEdittext.getText().toString();
-                String scheduleDescription = scheduleDescriptionEdittext.getText().toString();
-                String classesNames = classesNamesEdittext.getText().toString();
+                try{
+                    String scheduleName = scheduleNameEdittext.getText().toString();
+                    String scheduleDescription = scheduleDescriptionEdittext.getText().toString();
+                    String classesNames = classesNamesEdittext.getText().toString();
 
-                List<String> classesList = Arrays.asList(classesNames.split("\\s*,\\s*"));
+                    List<String> classesList = Arrays.asList(classesNames.split("\\s*,\\s*"));
 
-                List<String> tempClasses = Arrays.asList(((EditText) findViewById(currentEdittext[0])).getText().toString().split("\\s*,\\s*"));
-                String tempDay = ((Spinner) findViewById(currentSpinner[0])).getSelectedItem().toString();
+                    List<String> tempClasses = Arrays.asList(((EditText) findViewById(currentEdittext[0])).getText().toString().split("\\s*,\\s*"));
+                    String tempDay = ((Spinner) findViewById(currentSpinner[0])).getSelectedItem().toString();
 
-                if(!tempClasses.isEmpty() && !classes.containsKey(tempDay)){
-                    classes.put(tempDay, tempClasses);
-                }
+                    if(!tempClasses.isEmpty() && !classes.containsKey(tempDay)){
+                        classes.put(tempDay, tempClasses);
+                    }
 
-                if(!scheduleName.isEmpty() && !classesNames.isEmpty() && !classes.isEmpty()){
-                    firebase.addSchedule(uid, scheduleName, scheduleDescription, classes, new intSuccessCallback() {
-                        @Override
-                        public void onCallback(int success) {
-                            if (success==1){
-                                Toast.makeText(AddSchedule.this, "Schedule Added Successfully", Toast.LENGTH_SHORT).show();
-                                finish();
-                            }else{
-                                Toast.makeText(AddSchedule.this, "Error Adding Schedule", Toast.LENGTH_SHORT).show();
-                                finish();
+                    if(!scheduleName.isEmpty() && !classesNames.isEmpty() && !classes.isEmpty()){
+                        firebase.addSchedule(uid, scheduleName, scheduleDescription, classes, new intSuccessCallback() {
+                            @Override
+                            public void onCallback(int success) {
+                                if (success==1){
+                                    Toast.makeText(AddSchedule.this, "Schedule Added Successfully", Toast.LENGTH_SHORT).show();
+                                    finish();
+                                }else{
+                                    Toast.makeText(AddSchedule.this, "Error Adding Schedule", Toast.LENGTH_SHORT).show();
+                                    finish();
+                                }
                             }
-                        }
-                    });
-                }else{
-                    Toast.makeText(AddSchedule.this, "Schedule Data cannot be Empty!!!", Toast.LENGTH_SHORT).show();
+                        });
+                    }else{
+                        Toast.makeText(AddSchedule.this, "Schedule Data cannot be Empty!!!", Toast.LENGTH_SHORT).show();
+                    }
+                }catch(Exception e){
+                    Log.d("harsh", e.getMessage());
                 }
             }
         });

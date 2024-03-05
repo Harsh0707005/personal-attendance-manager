@@ -16,9 +16,14 @@ import com.google.firebase.database.ValueEventListener;
 import com.thattechyguy.personalattendancemanager.Interfaces.ArraylistHashMapCallback;
 import com.thattechyguy.personalattendancemanager.Interfaces.intSuccessCallback;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
 
 public class firebaseManage {
     private DatabaseReference mDatabase;
@@ -69,19 +74,59 @@ public class firebaseManage {
         metaData.put("Name", scheduleName);
         metaData.put("description", scheduleDescription);
         metaData.put("dailyClasses", classes);
-        metaData.put("attended", "0");
-        metaData.put("total", "0");
+        metaData.put("attended", 0);
+        metaData.put("total", 0);
         metaData.put("timestamp", ServerValue.TIMESTAMP);
 
         String classUniqueId = mDatabase.child(uid).child(uniqueId).push().getKey();
 
         // TODO: Change this to today's date and data
+
         HashMap<String, Object> data = new HashMap<>();
 
-        data.put("day", "Thursday");
-        data.put("date", "01022024");
-        data.put("attended", 0);
-        data.put("total", 1);
+        Calendar calendar = Calendar.getInstance();
+        Date rawDate = calendar.getTime();
+
+        int numDay = calendar.get(Calendar.DAY_OF_WEEK);
+        String day;
+
+        switch (numDay) {
+            case Calendar.SUNDAY:
+                day = "Sunday";
+                break;
+            case Calendar.MONDAY:
+                day = "Monday";
+                break;
+            case Calendar.TUESDAY:
+                day = "Tuesday";
+                break;
+            case Calendar.WEDNESDAY:
+                day = "Wednesday";
+                break;
+            case Calendar.THURSDAY:
+                day = "Thursday";
+                break;
+            case Calendar.FRIDAY:
+                day = "Friday";
+                break;
+            case Calendar.SATURDAY:
+                day = "Saturday";
+                break;
+            default:
+                day = "Unknown";
+        }
+
+        SimpleDateFormat df = new SimpleDateFormat("ddMMyyyy", Locale.getDefault());
+        String date = df.format(rawDate);
+
+        data.put("day", day);
+        data.put("date", date);
+        data.put("numAttended", 0);
+        data.put("numTotal", ((List<String>) classes.get(day)).size());
+        data.put("absent", false);
+        data.put("holiday", false);
+        data.put("marked", false);
+        data.put("totalClasses", classes.get(day));
         metaData.put(classUniqueId, data);
 
         mDatabase.child(uid).child(uniqueId).setValue(metaData).addOnCompleteListener(new OnCompleteListener<Void>() {
