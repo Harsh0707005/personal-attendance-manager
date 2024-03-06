@@ -293,7 +293,7 @@ public class expandableClassesAdapter extends BaseExpandableListAdapter {
             int day = calendar.get(Calendar.DAY_OF_MONTH);
             int month = calendar.get(Calendar.MONTH);
             int year = calendar.get(Calendar.YEAR);
-            return day + " " + new DateFormatSymbols().getMonths()[month - 1] + " " + year;
+            return day + " " + new DateFormatSymbols().getMonths()[month] + " " + year;
         } catch (Exception e) {
             Log.d("harsh", e.getMessage());
             return null;

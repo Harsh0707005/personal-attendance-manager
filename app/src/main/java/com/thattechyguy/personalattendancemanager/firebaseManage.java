@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -16,6 +17,8 @@ import com.google.firebase.database.ValueEventListener;
 import com.thattechyguy.personalattendancemanager.Interfaces.ArraylistHashMapCallback;
 import com.thattechyguy.personalattendancemanager.Interfaces.intSuccessCallback;
 
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -24,6 +27,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 
 public class firebaseManage {
     private DatabaseReference mDatabase;
@@ -127,6 +131,8 @@ public class firebaseManage {
         data.put("holiday", false);
         data.put("marked", false);
         data.put("totalClasses", classes.get(day));
+        data.put("timestamp", calendar.getTimeInMillis());
+
         metaData.put(classUniqueId, data);
 
         mDatabase.child(uid).child(uniqueId).setValue(metaData).addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -251,5 +257,156 @@ public class firebaseManage {
                 }
             }
         });
+    }
+    public void getLastAddedDate(String path, final DateCallback callback) {
+
+        DatabaseReference classRef = FirebaseDatabase.getInstance().getReference(path);
+        Query getDays = classRef.child("dailyClasses");
+
+        ArrayList<String> days = new ArrayList<>();
+
+        getDays.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    Query lastQuery = classRef.orderByChild("timestamp").limitToLast(1);
+
+                    DateFormat dateFormat = new SimpleDateFormat("ddMMyyyy", Locale.ENGLISH);
+
+                    lastQuery.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            if (dataSnapshot.exists()) {
+                                try{
+//                                    Log.d("harsh", String.valueOf(dataSnapshot.getChildren().iterator().next().child("date").getValue()));
+                                    String lastAddedDate = String.valueOf(dataSnapshot.getChildren().iterator().next().child("date").getValue());
+                                    Log.d("harsh", lastAddedDate);
+                                    calculateDates(lastAddedDate, ((HashMap<String, Object>) snapshot.getValue()).keySet(), ((HashMap<String, Object>) snapshot.getValue()));
+//                    callback.onCallback();
+//                    callback.onCallback(convertToDate(lastAddedDate));
+                                }catch(Exception e){
+                                    Log.d("harsh", "last query " + e.getMessage());
+                                }
+                            } else {
+                                Log.d("harsh", "no");
+                                callback.onCallback(new Date());
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+                            // Handle error
+                        }
+                    });
+                }else{
+                    Log.d("harsh", "doesnt exist");
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+    public ArrayList<HashMap<String, Object>> calculateDates(String lastAddedDate, Set<String> days, HashMap<String, Object> classes) {
+        ArrayList<HashMap<String, Object>> dateList = new ArrayList<>();
+        DateFormat dateFormat = new SimpleDateFormat("ddMMyyyy", Locale.ENGLISH);
+
+        try{
+            Date startDate = dateFormat.parse(lastAddedDate);
+
+            Calendar calendar = Calendar.getInstance();
+            Date rawDate = calendar.getTime();
+
+            String stringDate = dateFormat.format(rawDate);
+
+            Date todayDate = dateFormat.parse(stringDate);
+
+            calendar.setTime(startDate);
+            calendar.add(Calendar.DATE, 1);
+
+            while (!calendar.getTime().after(todayDate)) {
+                int numDay = calendar.get(Calendar.DAY_OF_WEEK);
+
+                String calendarDay;
+
+                switch (numDay) {
+                    case Calendar.SUNDAY:
+                        calendarDay = "Sunday";
+                        break;
+                    case Calendar.MONDAY:
+                        calendarDay = "Monday";
+                        break;
+                    case Calendar.TUESDAY:
+                        calendarDay = "Tuesday";
+                        break;
+                    case Calendar.WEDNESDAY:
+                        calendarDay = "Wednesday";
+                        break;
+                    case Calendar.THURSDAY:
+                        calendarDay = "Thursday";
+                        break;
+                    case Calendar.FRIDAY:
+                        calendarDay = "Friday";
+                        break;
+                    case Calendar.SATURDAY:
+                        calendarDay = "Saturday";
+                        break;
+                    default:
+                        calendarDay = "Unknown";
+                }
+
+                if (days.contains(calendarDay)){
+                    HashMap<String, Object> item = new HashMap<>();
+                    item.put("date", dateFormat.format(calendar.getTime()));
+                    item.put("day", calendarDay);
+                    item.put("timestamp", String.valueOf(calendar.getTimeInMillis()));
+
+                    dateList.add(item);
+//                    Log.d("harsh", String.valueOf(dateList));
+//                    dateList.add(dateFormat.format(calendar.getTime()));
+                }
+                calendar.add(Calendar.DATE, 1);
+            }
+        }catch(Exception e){
+            Log.d("harsh", "calculate date " + e.getMessage());
+        }
+//        Log.d("harsh", String.valueOf(dateList));
+        pushClassData("/attendance/iUXcZmmL2nZvZvFBIwMXG3hm2VP2/-NsEeLF-F9LI606yTyf7", dateList, classes);
+        return dateList;
+    }
+
+    public void pushClassData(String path, ArrayList<HashMap<String, Object>> dateList, HashMap<String, Object> classes) {
+        DatabaseReference classRef = FirebaseDatabase.getInstance().getReference(path);
+
+        for (HashMap<String, Object> item : dateList) {
+            String uniqueClassId = classRef.push().getKey();
+            HashMap<String, Object> data = new HashMap<>();
+            data.put("day", item.get("day"));
+            data.put("date", item.get("date"));
+            data.put("timestamp", item.get("timestamp"));
+            data.put("numAttended", 0);
+            data.put("numTotal", 0);
+            data.put("absent", false);
+            data.put("holiday", false);
+            data.put("marked", false);
+            data.put("totalClasses", classes.get(item.get("day")));
+
+            classRef.child(uniqueClassId).setValue(data);
+        }
+    }
+
+    public Date convertToDate(String dateString) {
+        try {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("ddMMyyyy", Locale.getDefault());
+            return dateFormat.parse(dateString);
+        } catch (Exception e) {
+            Log.d("harsh", e.getMessage());
+            return null;
+        }
+    }
+    public interface DateCallback {
+        void onCallback(Date date);
     }
 }
