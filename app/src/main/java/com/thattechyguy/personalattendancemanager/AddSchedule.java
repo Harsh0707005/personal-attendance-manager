@@ -166,6 +166,7 @@ public class AddSchedule extends AppCompatActivity {
                     String tempDay = ((Spinner) findViewById(currentSpinner[0])).getSelectedItem().toString();
 
                     if(!tempClasses.isEmpty() && !classes.containsKey(tempDay)){
+//                        Log.d("harsh", tempDay + " " + tempClasses + " " + classes + " " + classesNames + " " + scheduleName);
                         classes.put(tempDay, tempClasses);
                     }
 
@@ -186,7 +187,7 @@ public class AddSchedule extends AppCompatActivity {
                         Toast.makeText(AddSchedule.this, "Schedule Data cannot be Empty!!!", Toast.LENGTH_SHORT).show();
                     }
                 }catch(Exception e){
-                    Log.d("harsh", e.getMessage());
+                    Log.d("harsh", "add " + e.getMessage());
                 }
             }
         });

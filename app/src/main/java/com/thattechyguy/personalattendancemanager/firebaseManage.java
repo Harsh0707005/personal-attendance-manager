@@ -72,6 +72,7 @@ public class firebaseManage {
     public void addSchedule(String uid, String scheduleName, String scheduleDescription, HashMap<String, Object> classes, intSuccessCallback myCallback){
         mDatabase = firebaseDatabase.getReference("attendance");
 
+
         String uniqueId = mDatabase.child(uid).push().getKey();
 
         HashMap<String, Object> metaData = new HashMap<>();
@@ -123,17 +124,21 @@ public class firebaseManage {
         SimpleDateFormat df = new SimpleDateFormat("ddMMyyyy", Locale.getDefault());
         String date = df.format(rawDate);
 
-        data.put("day", day);
-        data.put("date", date);
-        data.put("numAttended", 0);
-        data.put("numTotal", ((List<String>) classes.get(day)).size());
-        data.put("absent", false);
-        data.put("holiday", false);
-        data.put("marked", false);
-        data.put("totalClasses", classes.get(day));
-        data.put("timestamp", calendar.getTimeInMillis());
+        try{
+            data.put("day", day);
+            data.put("date", date);
+            data.put("numAttended", 0);
+            data.put("numTotal", ((List<String>) classes.get(day)).size());
+            data.put("absent", false);
+            data.put("holiday", false);
+            data.put("marked", false);
+            data.put("totalClasses", classes.get(day));
+            data.put("timestamp", calendar.getTimeInMillis());
 
-        metaData.put(classUniqueId, data);
+            metaData.put(classUniqueId, data);
+        }catch(Exception e){
+            Log.d("harsh", "no class to add");
+        }
 
         mDatabase.child(uid).child(uniqueId).setValue(metaData).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
@@ -387,7 +392,7 @@ public class firebaseManage {
             data.put("date", item.get("date"));
             data.put("timestamp", item.get("timestamp"));
             data.put("numAttended", 0);
-            data.put("numTotal", 0);
+            data.put("numTotal", ((List<String>) classes.get(item.get("day"))).size());
             data.put("absent", false);
             data.put("holiday", false);
             data.put("marked", false);
