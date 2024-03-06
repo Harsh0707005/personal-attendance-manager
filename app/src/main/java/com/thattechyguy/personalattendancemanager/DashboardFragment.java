@@ -9,6 +9,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.thattechyguy.personalattendancemanager.Interfaces.intSuccessCallback;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -64,10 +66,10 @@ public class DashboardFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_dashboard, container, false);
         firebaseManage firebase = new firebaseManage();
         try{
-            firebase.getLastAddedDate("attendance/iUXcZmmL2nZvZvFBIwMXG3hm2VP2/-NsEeLF-F9LI606yTyf7", new firebaseManage.DateCallback() {
+            firebase.getLastAddedDate("attendance/iUXcZmmL2nZvZvFBIwMXG3hm2VP2/-NsEeLF-F9LI606yTyf7", new intSuccessCallback() {
                 @Override
-                public void onCallback(Date date) {
-
+                public void onCallback(int success) {
+                    Log.d("harsh", String.valueOf(success));
                 }
             });
         }catch(Exception e){

@@ -8,6 +8,7 @@ import android.util.Log;
 import android.widget.ExpandableListView;
 
 import com.thattechyguy.personalattendancemanager.Interfaces.ArraylistHashMapCallback;
+import com.thattechyguy.personalattendancemanager.Interfaces.intSuccessCallback;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -28,22 +29,31 @@ public class classes extends AppCompatActivity {
 
         firebaseManage firebase = new firebaseManage();
 
-        firebase.getClassData(path, new ArraylistHashMapCallback() {
-            @Override
-            public void onCallback(ArrayList<HashMap<String, Object>> data) {
-                ArrayList<HashMap<String, Object>> classDays = new ArrayList<HashMap<String, Object>>();
-                ArrayList<HashMap<String, Object>> dataList = new ArrayList<>();
+        try{
+            firebase.getLastAddedDate(path, new intSuccessCallback() {
+                @Override
+                public void onCallback(int success) {
+                    firebase.getClassData(path, new ArraylistHashMapCallback() {
+                        @Override
+                        public void onCallback(ArrayList<HashMap<String, Object>> data) {
+                            ArrayList<HashMap<String, Object>> classDays = new ArrayList<HashMap<String, Object>>();
+                            ArrayList<HashMap<String, Object>> dataList = new ArrayList<>();
 //                Log.d("harsh", String.valueOf(data));
-                for(HashMap<String, Object> item:data){
+                            for(HashMap<String, Object> item:data){
 //                        Log.d("harsh", String.valueOf(item));
-                    if (!item.containsKey("dailyClasses")){
-                        dataList.add(item);
-                    }
-                }
-                expandableClassesAdapter = new expandableClassesAdapter(classes.this, dataList, path);
-                expandableClasses.setAdapter(expandableClassesAdapter);
+                                if (!item.containsKey("dailyClasses")){
+                                    dataList.add(item);
+                                }
+                            }
+                            expandableClassesAdapter = new expandableClassesAdapter(classes.this, dataList, path);
+                            expandableClasses.setAdapter(expandableClassesAdapter);
 //                Log.d("harsh", String.valueOf(data));
-            }
-        });
+                        }
+                    });
+                }
+            });
+        }catch(Exception e){
+            Log.d("harsh", e.getMessage());
+        }
     }
 }

@@ -263,7 +263,7 @@ public class firebaseManage {
             }
         });
     }
-    public void getLastAddedDate(String path, final DateCallback callback) {
+    public void getLastAddedDate(String path, intSuccessCallback myCallback) {
 
         DatabaseReference classRef = FirebaseDatabase.getInstance().getReference(path);
         Query getDays = classRef.child("dailyClasses");
@@ -286,7 +286,16 @@ public class firebaseManage {
 //                                    Log.d("harsh", String.valueOf(dataSnapshot.getChildren().iterator().next().child("date").getValue()));
                                     String lastAddedDate = String.valueOf(dataSnapshot.getChildren().iterator().next().child("date").getValue());
                                     Log.d("harsh", lastAddedDate);
-                                    calculateDates(lastAddedDate, ((HashMap<String, Object>) snapshot.getValue()).keySet(), ((HashMap<String, Object>) snapshot.getValue()));
+                                    calculateDates(path, lastAddedDate, ((HashMap<String, Object>) snapshot.getValue()).keySet(), ((HashMap<String, Object>) snapshot.getValue()), new intSuccessCallback() {
+                                        @Override
+                                        public void onCallback(int success) {
+                                            if (success==1) {
+                                                myCallback.onCallback(1);
+                                            }else{
+                                                myCallback.onCallback(0);
+                                            }
+                                        }
+                                    });
 //                    callback.onCallback();
 //                    callback.onCallback(convertToDate(lastAddedDate));
                                 }catch(Exception e){
@@ -294,7 +303,6 @@ public class firebaseManage {
                                 }
                             } else {
                                 Log.d("harsh", "no");
-                                callback.onCallback(new Date());
                             }
                         }
 
@@ -314,10 +322,9 @@ public class firebaseManage {
             }
         });
     }
-    public ArrayList<HashMap<String, Object>> calculateDates(String lastAddedDate, Set<String> days, HashMap<String, Object> classes) {
+    public ArrayList<HashMap<String, Object>> calculateDates(String path, String lastAddedDate, Set<String> days, HashMap<String, Object> classes, intSuccessCallback myCallback) {
         ArrayList<HashMap<String, Object>> dateList = new ArrayList<>();
         DateFormat dateFormat = new SimpleDateFormat("ddMMyyyy", Locale.ENGLISH);
-
         try{
             Date startDate = dateFormat.parse(lastAddedDate);
 
@@ -378,13 +385,24 @@ public class firebaseManage {
             Log.d("harsh", "calculate date " + e.getMessage());
         }
 //        Log.d("harsh", String.valueOf(dateList));
-        pushClassData("/attendance/iUXcZmmL2nZvZvFBIwMXG3hm2VP2/-NsEeLF-F9LI606yTyf7", dateList, classes);
+        pushClassData(path, dateList, classes, new intSuccessCallback() {
+            @Override
+            public void onCallback(int success) {
+                if (success==1) {
+                    myCallback.onCallback(1);
+                }else{
+                    myCallback.onCallback(0);
+                }
+            }
+        });
         return dateList;
     }
 
-    public void pushClassData(String path, ArrayList<HashMap<String, Object>> dateList, HashMap<String, Object> classes) {
+    public void pushClassData(String path, ArrayList<HashMap<String, Object>> dateList, HashMap<String, Object> classes, intSuccessCallback myCallback) {
         DatabaseReference classRef = FirebaseDatabase.getInstance().getReference(path);
-
+        if (dateList.isEmpty()){
+            myCallback.onCallback(1);
+        }
         for (HashMap<String, Object> item : dateList) {
             String uniqueClassId = classRef.push().getKey();
             HashMap<String, Object> data = new HashMap<>();
@@ -398,20 +416,16 @@ public class firebaseManage {
             data.put("marked", false);
             data.put("totalClasses", classes.get(item.get("day")));
 
-            classRef.child(uniqueClassId).setValue(data);
+            classRef.child(uniqueClassId).setValue(data).addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    if (task.isSuccessful()){
+                        myCallback.onCallback(1);
+                    }else{
+                        myCallback.onCallback(0);
+                    }
+                }
+            });
         }
-    }
-
-    public Date convertToDate(String dateString) {
-        try {
-            SimpleDateFormat dateFormat = new SimpleDateFormat("ddMMyyyy", Locale.getDefault());
-            return dateFormat.parse(dateString);
-        } catch (Exception e) {
-            Log.d("harsh", e.getMessage());
-            return null;
-        }
-    }
-    public interface DateCallback {
-        void onCallback(Date date);
     }
 }
