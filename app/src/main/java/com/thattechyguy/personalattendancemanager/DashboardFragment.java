@@ -9,11 +9,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.thattechyguy.personalattendancemanager.Interfaces.ArraylistHashMapCallback;
 import com.thattechyguy.personalattendancemanager.Interfaces.intSuccessCallback;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Locale;
 
 /**
@@ -64,7 +67,13 @@ public class DashboardFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_dashboard, container, false);
-//        firebaseManage firebase = new firebaseManage();
+        firebaseManage firebase = new firebaseManage();
+        firebase.getAttendanceDate("attendance/iUXcZmmL2nZvZvFBIwMXG3hm2VP2/-NsEeLF-F9LI606yTyf7", new ArraylistHashMapCallback() {
+            @Override
+            public void onCallback(ArrayList<HashMap<String, Object>> data) {
+
+            }
+        });
 //        try{
 //            firebase.getLastAddedDate("attendance/iUXcZmmL2nZvZvFBIwMXG3hm2VP2/-NsEeLF-F9LI606yTyf7", new intSuccessCallback() {
 //                @Override
