@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.thattechyguy.personalattendancemanager.Interfaces.ArraylistHashMapCallback;
+import com.thattechyguy.personalattendancemanager.Interfaces.HashMapObjectCallback;
 import com.thattechyguy.personalattendancemanager.Interfaces.intSuccessCallback;
 
 import java.text.SimpleDateFormat;
@@ -68,10 +69,10 @@ public class DashboardFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_dashboard, container, false);
         firebaseManage firebase = new firebaseManage();
-        firebase.getAttendanceDate("attendance/iUXcZmmL2nZvZvFBIwMXG3hm2VP2/-NsEeLF-F9LI606yTyf7", new ArraylistHashMapCallback() {
+        firebase.getAttendanceDate("attendance/iUXcZmmL2nZvZvFBIwMXG3hm2VP2/-NsEeLF-F9LI606yTyf7", new HashMapObjectCallback() {
             @Override
-            public void onCallback(ArrayList<HashMap<String, Object>> data) {
-
+            public void onCallback(HashMap<String, Object> data) {
+                Log.d("harsh", String.valueOf(data));
             }
         });
 //        try{

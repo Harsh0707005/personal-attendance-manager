@@ -15,6 +15,7 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 import com.thattechyguy.personalattendancemanager.Interfaces.ArraylistHashMapCallback;
+import com.thattechyguy.personalattendancemanager.Interfaces.HashMapObjectCallback;
 import com.thattechyguy.personalattendancemanager.Interfaces.intSuccessCallback;
 
 import java.text.DateFormat;
@@ -429,29 +430,30 @@ public class firebaseManage {
         }
     }
 
-    public void getAttendanceDate(String path, ArraylistHashMapCallback myCallback){
+    public void getAttendanceDate(String path, HashMapObjectCallback myCallback){
         DatabaseReference loc = firebaseDatabase.getReference(path);
 
         loc.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                HashMap<String, Integer> totalIndividualCount = new HashMap<String, Integer>();
-                HashMap<String, Integer> attendanceCount = new HashMap<String, Integer>();
+                HashMap<String, Object> attendance = new HashMap<>();
+
+                attendance.put("total", new HashMap<>());
+                attendance.put("attended", new HashMap<>());
+
+                int numTotal = 0;
+                int numAttended = 0;
+
                 ArrayList<String> classes = new ArrayList<>();
                 for (DataSnapshot scheduleSnapshot: snapshot.getChildren()){
-                    HashMap<String, Object> item = new HashMap<String, Object>();
                     if (scheduleSnapshot.hasChildren()) {
-//                        Log.d("harsh", scheduleSnapshot.getKey());
                         if(scheduleSnapshot.getKey().equals("dailyClasses")){
-//                            item.put(scheduleSnapshot.getKey(), scheduleSnapshot.getValue());
-//                            attendanceCount.add(item);
                             continue;
                         }
                         boolean holiday = (boolean) scheduleSnapshot.child("holiday").getValue();
                         boolean marked = (boolean) scheduleSnapshot.child("marked").getValue();
 
                         if (!holiday && marked){
-//                            ArrayList<String> tempClasses = (ArrayList<String>) scheduleSnapshot.child("totalClasses").getValue();
 
                             for (String temp : (ArrayList<String>) scheduleSnapshot.child("totalClasses").getValue()){
                                 if (!classes.contains(temp)){
@@ -459,13 +461,14 @@ public class firebaseManage {
                                 }
                                 try{
                                     int count = 0;
-                                    if (totalIndividualCount.containsKey(temp)) {
-                                        count = totalIndividualCount.get(temp);
+                                    if (((HashMap<String, Integer>) attendance.get("total")).containsKey(temp)) {
+                                        count = ((HashMap<String, Integer>) attendance.get("total")).get(temp);
                                     }
-                                    totalIndividualCount.put(temp, count + 1);
+                                    ((HashMap<String, Integer>) attendance.get("total")).put(temp, count + 1);
+                                    numTotal = numTotal + 1;
 
                                 }catch(Exception e){
-                                    Log.d("harsh", "first " + e.getMessage());
+                                    Log.d("harsh", "total calculation " + e.getMessage());
                                 }
                             }
 
@@ -475,35 +478,28 @@ public class firebaseManage {
                                 }
                                 for (String temp : (ArrayList<String>) scheduleSnapshot.child("attendedClasses").getValue()){
                                     int count = 0;
-                                    if (attendanceCount.containsKey(temp)) {
-                                        count = attendanceCount.get(temp);
+                                    if (((HashMap<String, Integer>) attendance.get("attended")).containsKey(temp)) {
+                                        count = ((HashMap<String, Integer>) attendance.get("attended")).get(temp);
                                     }
-                                    attendanceCount.put(temp, count + 1);
+                                    ((HashMap<String, Integer>) attendance.get("attended")).put(temp, count+1);
+                                    numAttended = numAttended + 1;
                                 }
 
                             }catch(Exception e){
-                                Log.d("harsh", "second " + e.getMessage());
+                                Log.d("harsh", "attended calculation " + e.getMessage());
                             }
 
-//                            Log.d("harsh", String.valueOf(scheduleSnapshot.child("totalClasses").getValue()));
-//                            Log.d("harsh", String.valueOf(scheduleSnapshot.child("totalClasses").getValue().getClass()));
-//                            item.put("attendedClasses", scheduleSnapshot.child("attendedClasses").getValue());
-//                            item.put("Classes", scheduleSnapshot.child("totalClasses").getValue());
                         }
-//                        item.put("numAttended", scheduleSnapshot.child("numAttended").getValue());
-//                        item.put("numTotal", scheduleSnapshot.child("numTotal").getValue());
-//                        item.put("totalClasses", scheduleSnapshot.child("totalClasses").getValue());
-//
-//                        classesData.add(item);
+
                     }
 
                 }
-                Log.d("harsh", String.valueOf(classes));
-                Log.d("harsh", String.valueOf(totalIndividualCount));
-                Log.d("harsh", String.valueOf(attendanceCount));
 
-//                Log.d("harsh", String.valueOf(classesData));
-//                myCallback.onCallback(classesData);
+                attendance.put("numAttended", numAttended);
+                attendance.put("numTotal", numTotal);
+                attendance.put("classes", classes);
+
+                myCallback.onCallback(attendance);
             }
 
             @Override
