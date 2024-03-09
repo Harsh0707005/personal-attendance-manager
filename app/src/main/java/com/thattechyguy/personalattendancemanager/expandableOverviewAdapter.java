@@ -70,12 +70,20 @@ public class expandableOverviewAdapter extends BaseExpandableListAdapter {
         }
 
         TextView classTitle = convertView.findViewById(R.id.classTitle);
-        TextView numAttended = convertView.findViewById(R.id.numAttended);
-        TextView numTotal = convertView.findViewById(R.id.numTotal);
-        TextView numPercent = convertView.findViewById(R.id.numPercent);
+        TextView numAttendedTextView = convertView.findViewById(R.id.numAttendedTextView);
+        TextView numTotalTextView = convertView.findViewById(R.id.numTotalTextView);
+        TextView numPercentTextView = convertView.findViewById(R.id.numPercentTextView);
 
         try{
-            classTitle.setText(getGroup(groupPosition).toString());
+            String className = getGroup(groupPosition).toString();
+            Integer numAttended = ((HashMap<String, Integer>) this.attendance.get("attended")).get(className);
+            Integer numTotal = ((HashMap<String, Integer>) this.attendance.get("total")).get(className);
+            String percent = String.valueOf(((numAttended*100)/numTotal));
+
+            classTitle.setText(className);
+            numAttendedTextView.setText(numAttended.toString());
+            numTotalTextView.setText(numTotal.toString());
+            numPercentTextView.setText(percent+"%");
         }catch(Exception e){
             Log.d("harsh", e.getMessage());
         }

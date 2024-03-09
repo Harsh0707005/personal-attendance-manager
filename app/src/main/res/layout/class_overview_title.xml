@@ -18,61 +18,44 @@
             android:layout_height="match_parent"
             android:padding="20dp">
 
-            <LinearLayout
-                android:id="@+id/titleLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center">
-
-                <TextView
-                    android:id="@+id/classTitle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Class Name"
-                    android:textStyle="bold"
-                    android:layout_marginVertical="10dp"
-                    android:layout_marginHorizontal="5dp"
-                    android:textColor="@color/black"
-                    android:textSize="17sp"/>
-
-            </LinearLayout>
-
-            <ImageView
-                android:id="@+id/markedIcon"
+            <TextView
+                android:id="@+id/classTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                app:srcCompat="@drawable/marked_icon"
-                android:layout_alignParentRight="true"
-                android:visibility="gone"/>
+                android:text="Class Name"
+                android:textStyle="bold"
+                android:layout_marginVertical="10dp"
+                android:layout_marginHorizontal="5dp"
+                android:textColor="@color/black"
+                android:textSize="17sp"
+                android:layout_centerHorizontal="true"/>
 
             <TextView
-                android:id="@+id/numAttendedTextView"
+                android:id="@+id/attendLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Attended:"
                 android:layout_marginEnd="10dp"
                 android:textColor="@color/black"
-                android:layout_below="@id/titleLayout"
+                android:layout_below="@id/classTitle"
                 android:labelFor="@id/titleLayout"/>
 
             <TextView
-                android:id="@+id/numAttended"
+                android:id="@+id/numAttendedTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="123"
                 android:textColor="@color/black"
-                android:layout_toRightOf="@id/numAttendedTextView"
-                android:layout_alignBaseline="@id/numAttendedTextView"
+                android:layout_toRightOf="@id/attendLabel"
+                android:layout_alignBaseline="@id/attendLabel"
                 android:labelFor="@id/titleLayout"/>
 
             <TextView
-                android:id="@+id/numTotalTextView"
+                android:id="@+id/totalLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/numAttendedTextView"
-                android:layout_alignEnd="@id/numAttendedTextView"
+                android:layout_below="@id/attendLabel"
+                android:layout_alignEnd="@id/attendLabel"
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="5dp"
                 android:layout_marginBottom="5dp"
@@ -80,11 +63,11 @@
                 android:textColor="@color/black" />
 
             <TextView
-                android:id="@+id/numTotal"
+                android:id="@+id/numTotalTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignBaseline="@id/numTotalTextView"
-                android:layout_toRightOf="@id/numTotalTextView"
+                android:layout_alignBaseline="@id/totalLabel"
+                android:layout_toRightOf="@id/totalLabel"
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="5dp"
                 android:layout_marginBottom="5dp"
@@ -92,11 +75,11 @@
                 android:textColor="@color/black" />
 
             <TextView
-                android:id="@+id/numPercentTextView"
+                android:id="@+id/percentLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/titleLayout"
-                android:layout_toStartOf="@id/numPercent"
+                android:layout_below="@id/classTitle"
+                android:layout_toStartOf="@id/numPercentTextView"
                 android:layout_marginTop="5dp"
                 android:layout_marginBottom="5dp"
                 android:layout_marginRight="5dp"
@@ -104,10 +87,10 @@
                 android:textColor="@color/black" />
 
             <TextView
-                android:id="@+id/numPercent"
+                android:id="@+id/numPercentTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignBaseline="@id/numPercentTextView"
+                android:layout_alignBaseline="@id/percentLabel"
                 android:layout_alignParentEnd="true"
                 android:layout_marginTop="5dp"
                 android:layout_marginBottom="5dp"
