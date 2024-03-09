@@ -41,7 +41,7 @@
                 android:layout_marginTop="10dp"
                 android:gravity="center">
             <TextView
-                android:id="@+id/numAttendedTextView"
+                android:id="@+id/attendLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Attended Classes:"
@@ -51,15 +51,15 @@
                 android:textSize="17sp"/>
 
             <TextView
-                android:id="@+id/numAttended"
+                android:id="@+id/numAttendedTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="123"
+                android:text="-"
                 android:textColor="@color/black"
                 android:labelFor="@id/titleLayout"/>
 
             <TextView
-                android:id="@+id/numTotalTextView"
+                android:id="@+id/totalLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Total Classes:"
@@ -68,10 +68,10 @@
                 android:textSize="17sp"/>
 
             <TextView
-                android:id="@+id/numTotal"
+                android:id="@+id/numTotalTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="156"
+                android:text="-"
                 android:textColor="@color/black"
                 android:labelFor="@id/titleLayout"/>
 
@@ -83,7 +83,7 @@
                 android:background="@color/light_gray"/>
 
             <TextView
-                android:id="@+id/numPercentTextView"
+                android:id="@+id/percentLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Percentage:"
@@ -92,10 +92,10 @@
                 android:textSize="17sp"/>
 
             <TextView
-                android:id="@+id/numPercent"
+                android:id="@+id/numPercentTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="15%"
+                android:text="-"
                 android:textColor="@color/black"
                 android:layout_toRightOf="@id/numPercentTextView"
                 android:layout_alignBaseline="@id/numPercentTextView"
