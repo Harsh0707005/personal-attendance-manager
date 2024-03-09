@@ -25,7 +25,6 @@ public class homeBottomNav extends AppCompatActivity {
 
         bottomNavigationView.setItemIconTintList(null);
 
-
         bottomNavigationView.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -52,5 +51,6 @@ public class homeBottomNav extends AppCompatActivity {
                 return false;
             }
         });
+        bottomNavigationView.setSelectedItemId(R.id.dashboard_menu);
     }
 }
