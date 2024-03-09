@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_gravity="center">
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="40dp"
+        android:layout_marginBottom="10dp"
+        app:cardCornerRadius="20dp"
+        android:elevation="10dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="20dp"
+            android:gravity="center">
+
+            <com.github.mikephil.charting.charts.PieChart
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:id="@+id/classPie"/>
+
+            <View
+                android:id="@+id/line"
+                android:layout_width="250dp"
+                android:layout_height="2dp"
+                android:layout_marginTop="20dp"
+                android:layout_below="@id/classPie"
+                android:background="@color/light_gray"
+                android:layout_centerHorizontal="true"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_below="@id/line"
+                android:layout_marginTop="10dp"
+                android:gravity="center">
+            <TextView
+                android:id="@+id/numAttendedTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Attended Classes:"
+                android:layout_marginVertical="10dp"
+                android:layout_marginHorizontal="5dp"
+                android:textColor="@color/black"
+                android:textSize="17sp"/>
+
+            <TextView
+                android:id="@+id/numAttended"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="123"
+                android:textColor="@color/black"
+                android:labelFor="@id/titleLayout"/>
+
+            <TextView
+                android:id="@+id/numTotalTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Total Classes:"
+                android:layout_marginVertical="10dp"
+                android:textColor="@color/black"
+                android:textSize="17sp"/>
+
+            <TextView
+                android:id="@+id/numTotal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="156"
+                android:textColor="@color/black"
+                android:labelFor="@id/titleLayout"/>
+
+            <View
+                android:id="@+id/line1"
+                android:layout_width="150dp"
+                android:layout_height="2dp"
+                android:layout_margin="10dp"
+                android:background="@color/light_gray"/>
+
+            <TextView
+                android:id="@+id/numPercentTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Percentage:"
+                android:layout_marginVertical="5dp"
+                android:textColor="@color/black"
+                android:textSize="17sp"/>
+
+            <TextView
+                android:id="@+id/numPercent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="15%"
+                android:textColor="@color/black"
+                android:layout_toRightOf="@id/numPercentTextView"
+                android:layout_alignBaseline="@id/numPercentTextView"
+                android:layout_marginLeft="5dp"
+                android:paddingRight="5dp"
+                android:labelFor="@id/titleLayout"/>
+
+            </LinearLayout>
+        </RelativeLayout>
+
+    </androidx.cardview.widget.CardView>
+
+</RelativeLayout>
