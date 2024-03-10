@@ -11,6 +11,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 
@@ -45,6 +46,8 @@ public class DashboardFragment extends Fragment {
     private firebaseManage firebase;
     private PieChart pieChart;
     private int totalHeight;
+    private TextView numAttendedTextView, numTotalTextView, numPercentTextView;
+    private View rootView;
 
     public DashboardFragment() {
         // Required empty public constructor
@@ -79,9 +82,13 @@ public class DashboardFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_dashboard, container, false);
+        rootView = inflater.inflate(R.layout.fragment_dashboard, container, false);
 
         scheduleSpinner = rootView.findViewById(R.id.scheduleSpinner);
+
+        numAttendedTextView = rootView.findViewById(R.id.numAttendedTextView);
+        numTotalTextView = rootView.findViewById(R.id.numTotalTextView);
+        numPercentTextView = rootView.findViewById(R.id.numPercentTextView);
 
         ExpandableListView expandableListOverview = rootView.findViewById(R.id.expandableListOverview);
 
@@ -110,7 +117,7 @@ public class DashboardFragment extends Fragment {
                     scheduleNames.add(schedule.get("scheduleName").toString());
                 }
 
-                ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, scheduleNames);
+                ArrayAdapter<String> adapter = new ArrayAdapter<>(rootView.getContext(), android.R.layout.simple_spinner_dropdown_item, scheduleNames);
 
                 adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
@@ -140,14 +147,24 @@ public class DashboardFragment extends Fragment {
 //                Log.d("harsh", String.valueOf(data));
                 showPieChart(pieChart, (HashMap<String, Integer>) data.get("attended"));
                 try{
-                    expandableOverviewAdapter adapter = new expandableOverviewAdapter(getContext(), data);
+
+                    Integer numAttended = (Integer) data.get("numAttended");
+                    Integer numTotal = (Integer) data.get("numTotal");
+
+                    String percent = String.valueOf(((numAttended*100)/numTotal));
+
+                    numAttendedTextView.setText(numAttended.toString());
+                    numTotalTextView.setText(numTotal.toString());
+                    numPercentTextView.setText(percent+"%");
+
+
+                    expandableOverviewAdapter adapter = new expandableOverviewAdapter(rootView.getContext(), data);
                     expandableListOverview.setAdapter(adapter);
 
 
                     expandableListOverview.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
                         @Override
                         public void onGroupExpand(int groupPosition) {
-                            int temp_height = totalHeight;
                             ExpandableListAdapter listAdapter = expandableListOverview.getExpandableListAdapter();
                             View childView = listAdapter.getChildView(groupPosition, 0, false, null, expandableListOverview);
                             childView.measure(
