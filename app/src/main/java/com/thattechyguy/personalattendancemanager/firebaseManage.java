@@ -1,6 +1,7 @@
 package com.thattechyguy.personalattendancemanager;
 
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
@@ -16,6 +17,7 @@ import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 import com.thattechyguy.personalattendancemanager.Interfaces.ArraylistHashMapCallback;
 import com.thattechyguy.personalattendancemanager.Interfaces.HashMapObjectCallback;
+import com.thattechyguy.personalattendancemanager.Interfaces.booleanSuccessCallback;
 import com.thattechyguy.personalattendancemanager.Interfaces.intSuccessCallback;
 
 import java.text.DateFormat;
@@ -505,6 +507,20 @@ public class firebaseManage {
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 Log.d("harsh", "Error fetching data");
+            }
+        });
+    }
+    public void deleteSchedule(String path, booleanSuccessCallback myCallback){
+        DatabaseReference loc = firebaseDatabase.getReference(path);
+
+        loc.removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()){
+                    myCallback.onCallback(true);
+                }else{
+                    myCallback.onCallback(false);
+                }
             }
         });
     }

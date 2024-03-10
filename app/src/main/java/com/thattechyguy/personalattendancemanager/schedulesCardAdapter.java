@@ -1,19 +1,22 @@
 package com.thattechyguy.personalattendancemanager;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.util.Log;
+import android.location.Address;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import androidx.activity.OnBackPressedDispatcherKt;
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.thattechyguy.personalattendancemanager.Interfaces.booleanSuccessCallback;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,10 +26,15 @@ public class schedulesCardAdapter extends RecyclerView.Adapter<schedulesCardAdap
 
     private ArrayList<HashMap<String, Object>> dataList;
     private Context context;
+    private firebaseManage firebase;
+    private String uid;
 
     public schedulesCardAdapter(Context context, ArrayList<HashMap<String, Object>> dataList){
         this.context = context;
         this.dataList = dataList;
+
+        firebase = new firebaseManage();
+        uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
     }
     @NonNull
     @Override
@@ -43,6 +51,7 @@ public class schedulesCardAdapter extends RecyclerView.Adapter<schedulesCardAdap
         TextView numAttended = holder.numAttended;
         TextView numTotal = holder.numTotal;
         TextView numPercent = holder.numPercent;
+        TextView deleteScheduleBtn = holder.deleteScheduleBtn;
         CardView cardView = holder.cardView;
 
 
@@ -68,13 +77,59 @@ public class schedulesCardAdapter extends RecyclerView.Adapter<schedulesCardAdap
         cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
                 Intent i = new Intent(context, classes.class);
                 i.putExtra("path", "/attendance/"+uid+"/"+ uniqueId +"/");
                 context.startActivity(i);
             }
         });
 
+        deleteScheduleBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                AlertDialog.Builder alert = new AlertDialog.Builder(context);
+                alert.setTitle("Caution");
+                alert.setMessage("Are you sure you want to delete the schedule?");
+                alert.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        firebase.deleteSchedule(String.format("/attendance/%s/%s/", uid, uniqueId), new booleanSuccessCallback() {
+                            @Override
+                            public void onCallback(boolean success) {
+                                if (success) {
+                                    Toast.makeText(context, "Schedule Deleted Successfully", Toast.LENGTH_SHORT).show();
+                                }else{
+                                    Toast.makeText(context, "Error deleting Schedule", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
+                        dialog.dismiss();
+                    }
+                });
+
+                alert.setNegativeButton("No", new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+
+                alert.show();
+
+//                firebase.deleteSchedule(String.format("/attendance/%s/%s/", uid, uniqueId), new booleanSuccessCallback() {
+//                    @Override
+//                    public void onCallback(boolean success) {
+//                        if (success) {
+//                            Toast.makeText(context, "Schedule Deleted Successfully", Toast.LENGTH_SHORT).show();
+//                        }else{
+//                            Toast.makeText(context, "Error deleting Schedule", Toast.LENGTH_SHORT).show();
+//                        }
+//                    }
+//                });
+            }
+        });
     }
 
     @Override
@@ -84,7 +139,7 @@ public class schedulesCardAdapter extends RecyclerView.Adapter<schedulesCardAdap
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
-        TextView scheduleName, scheduleDescription, numAttended, numTotal, numPercent;
+        TextView scheduleName, scheduleDescription, numAttended, numTotal, numPercent, deleteScheduleBtn;
         CardView cardView;
 
         public ViewHolder(@NonNull View itemView) {
@@ -96,6 +151,7 @@ public class schedulesCardAdapter extends RecyclerView.Adapter<schedulesCardAdap
             numTotal = itemView.findViewById(R.id.numTotal);
             numPercent = itemView.findViewById(R.id.numPercent);
             cardView = itemView.findViewById(R.id.cardView);
+            deleteScheduleBtn = itemView.findViewById(R.id.deleteScheduleBtn);
         }
     }
 }
