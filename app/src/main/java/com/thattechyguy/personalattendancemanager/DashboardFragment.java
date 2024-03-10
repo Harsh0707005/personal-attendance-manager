@@ -10,17 +10,20 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.thattechyguy.personalattendancemanager.Interfaces.ArraylistHashMapCallback;
 import com.thattechyguy.personalattendancemanager.Interfaces.HashMapObjectCallback;
@@ -48,10 +51,11 @@ public class DashboardFragment extends Fragment {
     private firebaseManage firebase;
     private PieChart totalAttendancePieChart, individualPieChart;
     private int totalHeight;
-    private TextView numAttendedTextView, numTotalTextView, numPercentTextView;
+    private TextView numAttendedTextView, numTotalTextView, numPercentTextView, noDataTextView, gotoManageSchedule;
     private View rootView;
     private RelativeLayout dataLayout;
     private ProgressBar progressBar;
+    private LinearLayout noDataLayout;
 
     public DashboardFragment() {
         // Required empty public constructor
@@ -90,6 +94,9 @@ public class DashboardFragment extends Fragment {
 
         scheduleSpinner = rootView.findViewById(R.id.scheduleSpinner);
 
+        noDataLayout = rootView.findViewById(R.id.noDataLayout);
+        noDataTextView = rootView.findViewById(R.id.noDataTextView);
+        gotoManageSchedule = rootView.findViewById(R.id.gotoManageSchedule);
         numAttendedTextView = rootView.findViewById(R.id.numAttendedTextView);
         numTotalTextView = rootView.findViewById(R.id.numTotalTextView);
         numPercentTextView = rootView.findViewById(R.id.numPercentTextView);
@@ -107,6 +114,26 @@ public class DashboardFragment extends Fragment {
 
         firebase = new firebaseManage();
 
+        gotoManageSchedule.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ScheduleManageFragment manageScheduleFragment = new ScheduleManageFragment();
+
+                // Start a fragment transaction
+                FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
+
+                // Replace the current fragment with the new fragment
+                transaction.replace(R.id.fragment, manageScheduleFragment);
+
+                // Commit the transaction
+                transaction.commit();
+
+                BottomNavigationView bottomNavigationView = getActivity().findViewById(R.id.bottomNavigationView);
+
+                // Set the selected item ID to the ID of the menu item corresponding to the fragment
+                bottomNavigationView.setSelectedItemId(R.id.schedule_manage_menu);
+            }
+        });
 
         loadSpinner(uid, scheduleSpinner, expandableListOverview);
         return rootView;
@@ -153,6 +180,12 @@ public class DashboardFragment extends Fragment {
             @Override
             public void onCallback(HashMap<String, Object> data) {
 //                Log.d("harsh", String.valueOf(data));
+                if (((Integer) data.get("numTotal")==0)){
+                    contentInvisible();
+                    noDataLayout.setVisibility(View.VISIBLE);
+                    progressBar.setVisibility(View.GONE);
+                    return;
+                }
                 HashMap<String, Integer> tempData = new HashMap<>();
 
                 tempData.put("Attended", (Integer) data.get("numAttended"));
@@ -244,14 +277,16 @@ public class DashboardFragment extends Fragment {
         expandableListOverview.setLayoutParams(params);
     }
     private void contentVisible(){
-        scheduleSpinner.setVisibility(View.VISIBLE);
+//        scheduleSpinner.setVisibility(View.VISIBLE);
         dataLayout.setVisibility(View.VISIBLE);
         progressBar.setVisibility(View.GONE);
+        noDataLayout.setVisibility(View.GONE);
     }
     private void contentInvisible(){
-        scheduleSpinner.setVisibility(View.INVISIBLE);
+//        scheduleSpinner.setVisibility(View.INVISIBLE);
         dataLayout.setVisibility(View.INVISIBLE);
         progressBar.setVisibility(View.VISIBLE);
+        noDataLayout.setVisibility(View.INVISIBLE);
     }
 
     private void showPieChart(PieChart pieChart, HashMap<String, Integer> data){
