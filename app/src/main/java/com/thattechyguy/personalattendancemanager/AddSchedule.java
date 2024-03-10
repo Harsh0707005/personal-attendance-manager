@@ -2,12 +2,10 @@ package com.thattechyguy.personalattendancemanager;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -81,7 +79,7 @@ public class AddSchedule extends AppCompatActivity {
                         return;
                     }
 
-                    View view = LayoutInflater.from(AddSchedule.this).inflate(R.layout.classes_day_layout, null);
+                    View view = LayoutInflater.from(AddSchedule.this).inflate(R.layout.add_class_day_layout, null);
 
                     Spinner spinner = view.findViewById(R.id.spinner);
                     spinner.setId(View.generateViewId());

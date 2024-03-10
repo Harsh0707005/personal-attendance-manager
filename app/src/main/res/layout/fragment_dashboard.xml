@@ -3,16 +3,27 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".DashboardFragment">
+    android:orientation="vertical"
+    tools:context=".DashboardFragment"
+    android:padding="5dp">
 
 <!--    <com.github.mikephil.charting.charts.PieChart-->
 <!--        android:layout_width="match_parent"-->
 <!--        android:layout_height="300dp"-->
 <!--        android:id="@+id/pieChart_view"/>-->
 
+    <Spinner
+        android:id="@+id/scheduleSpinner"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="15dp"/>
+
     <ExpandableListView
         android:id="@+id/expandableListOverview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="60dp"
         android:layoutDirection="rtl"/>
 </FrameLayout>

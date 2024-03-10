@@ -2,30 +2,27 @@ package com.thattechyguy.personalattendancemanager;
 
 import android.graphics.Color;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ExpandableListView;
+import android.widget.Spinner;
+
+import androidx.fragment.app.Fragment;
 
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
+import com.google.firebase.auth.FirebaseAuth;
 import com.thattechyguy.personalattendancemanager.Interfaces.ArraylistHashMapCallback;
 import com.thattechyguy.personalattendancemanager.Interfaces.HashMapObjectCallback;
-import com.thattechyguy.personalattendancemanager.Interfaces.intSuccessCallback;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -40,6 +37,12 @@ public class DashboardFragment extends Fragment {
 
     private String mParam1;
     private String mParam2;
+
+    private Spinner scheduleSpinner;
+    private String uid;
+    private FirebaseAuth mAuth;
+    private firebaseManage firebase;
+    private PieChart pieChart;
 
     public DashboardFragment() {
         // Required empty public constructor
@@ -74,32 +77,73 @@ public class DashboardFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        PieChart pieChart;
         View rootView = inflater.inflate(R.layout.fragment_dashboard, container, false);
 
+        scheduleSpinner = rootView.findViewById(R.id.scheduleSpinner);
+
         ExpandableListView expandableListOverview = rootView.findViewById(R.id.expandableListOverview);
+
+        mAuth = FirebaseAuth.getInstance();
+        uid = mAuth.getCurrentUser().getUid();
+
+        firebase = new firebaseManage();
 
 //        {attended={BEE=14, EFE=8, EM=10, Maths-2=14, Mech. Workshop=4, BEE Lab=5, BME=11, BME Lab=5, Physics Lab=5, EL & EC Workshop=3, Physics=9, EM Lab=3}, numTotal=171, total={BEE=24, EFE=15, EM=16, Maths-2=32, Mech. Workshop=8, BEE Lab=7, BME Lab=8, BME=17, Physics Lab=9, EL & EC Workshop=9, EM Lab=8, Physics=18}, numAttended=91, classes=[EM Lab, BEE, Maths-2, Mech. Workshop, BME Lab, EFE, BME, Physics, EL & EC Workshop, EM, Physics Lab, BEE Lab]}
 
 //        pieChart = rootView.findViewById(R.id.pieChart_view);
 
+        loadSpinner(uid, scheduleSpinner, expandableListOverview);
+        return rootView;
+    }
+    private void loadSpinner(String uid, Spinner spinner, ExpandableListView expandableListOverview){
 
-        firebaseManage firebase = new firebaseManage();
-        firebase.getAttendanceDate("attendance/iUXcZmmL2nZvZvFBIwMXG3hm2VP2/-NndQUc2kgcjJSH2-lw9", new HashMapObjectCallback() {
+//        [{scheduleName=College, numTotal=171, numAttended=91, scheduleDescription=Schedule for college, uniqueId=-NndQUc2kgcjJSH2-lw9}, {scheduleName=abc, numTotal=5, numAttended=2, scheduleDescription=, uniqueId=-NsEeLF-F9LI606yTyf7}, {scheduleName=hahah, numTotal=8, numAttended=5, scheduleDescription=, uniqueId=-Ns-T8wOOHI8ED4km4Rx}]
+        firebase.getScheduleData(uid, new ArraylistHashMapCallback() {
+            @Override
+            public void onCallback(ArrayList<HashMap<String, Object>> data) {
+                ArrayList<String> scheduleNames = new ArrayList<>();
+
+                for (HashMap<String, Object> schedule:data){
+//                    Log.d("harsh", String.valueOf(schedule.get("scheduleName")));
+                    scheduleNames.add(schedule.get("scheduleName").toString());
+                }
+
+                ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, scheduleNames);
+
+                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+                spinner.setAdapter(adapter);
+
+                spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+//                        Log.d("harsh", String.valueOf(position));
+//                        Log.d("harsh", String.valueOf(data.get(position)));
+                        showData(uid, data.get(position).get("uniqueId").toString(), expandableListOverview);
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) {
+
+                    }
+                });
+            }
+        });
+    }
+    private void showData(String uid, String uniqueId, ExpandableListView expandableListOverview){
+        firebase.getAttendanceDate(String.format("attendance/%s/%s", uid, uniqueId), new HashMapObjectCallback() {
             @Override
             public void onCallback(HashMap<String, Object> data) {
-                Log.d("harsh", String.valueOf(data));
+//                Log.d("harsh", String.valueOf(data));
                 try{
-                expandableOverviewAdapter adapter = new expandableOverviewAdapter(rootView.getContext(), data);
-                expandableListOverview.setAdapter(adapter);
+                    expandableOverviewAdapter adapter = new expandableOverviewAdapter(getContext(), data);
+                    expandableListOverview.setAdapter(adapter);
                 }catch(Exception e){
                     Log.d("harsh", e.getMessage());
                 }
 //                showPieChart(pieChart, (HashMap<String, Integer>) data.get("attended"));
             }
         });
-
-        return rootView;
     }
     private void showPieChart(PieChart pieChart, HashMap<String, Integer> attendance){
 
@@ -141,5 +185,4 @@ public class DashboardFragment extends Fragment {
             Log.d("harsh", e.getMessage());
         }
     }
-
 }
