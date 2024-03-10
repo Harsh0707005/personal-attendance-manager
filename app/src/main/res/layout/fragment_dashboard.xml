@@ -24,16 +24,16 @@
             android:layout_height="wrap_content">
 
             <com.github.mikephil.charting.charts.PieChart
-                android:id="@+id/pieChart_view"
+                android:id="@+id/totalAttendancePieChart"
                 android:layout_width="match_parent"
-                android:layout_height="400dp" />
+                android:layout_height="300dp" />
 
             <LinearLayout
                 android:id="@+id/attendanceDataLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:layout_below="@id/pieChart_view"
+                android:layout_below="@id/totalAttendancePieChart"
                 android:layout_marginTop="10dp"
                 android:gravity="center">
 
@@ -124,13 +124,19 @@
                 android:textSize="24sp"
                 android:textStyle="bold" />
 
+            <com.github.mikephil.charting.charts.PieChart
+                android:id="@+id/individualPieChart"
+                android:layout_width="match_parent"
+                android:layout_height="400dp"
+                android:layout_below="@id/expandableListTitle"/>
+
             <ExpandableListView
                 android:id="@+id/expandableListOverview"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_margin="20dp"
                 android:layoutDirection="rtl"
-                android:layout_below="@id/expandableListTitle"
+                android:layout_below="@id/individualPieChart"
                 android:scrollbars="none"
                 />
         </RelativeLayout>

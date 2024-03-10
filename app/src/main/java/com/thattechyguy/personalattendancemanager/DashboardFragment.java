@@ -44,7 +44,7 @@ public class DashboardFragment extends Fragment {
     private String uid;
     private FirebaseAuth mAuth;
     private firebaseManage firebase;
-    private PieChart pieChart;
+    private PieChart totalAttendancePieChart, individualPieChart;
     private int totalHeight;
     private TextView numAttendedTextView, numTotalTextView, numPercentTextView;
     private View rootView;
@@ -89,6 +89,8 @@ public class DashboardFragment extends Fragment {
         numAttendedTextView = rootView.findViewById(R.id.numAttendedTextView);
         numTotalTextView = rootView.findViewById(R.id.numTotalTextView);
         numPercentTextView = rootView.findViewById(R.id.numPercentTextView);
+        totalAttendancePieChart = rootView.findViewById(R.id.totalAttendancePieChart);
+        individualPieChart = rootView.findViewById(R.id.individualPieChart);
 
         ExpandableListView expandableListOverview = rootView.findViewById(R.id.expandableListOverview);
 
@@ -99,7 +101,6 @@ public class DashboardFragment extends Fragment {
 
         firebase = new firebaseManage();
 
-        pieChart = rootView.findViewById(R.id.pieChart_view);
 
         loadSpinner(uid, scheduleSpinner, expandableListOverview);
         return rootView;
@@ -145,7 +146,13 @@ public class DashboardFragment extends Fragment {
             @Override
             public void onCallback(HashMap<String, Object> data) {
 //                Log.d("harsh", String.valueOf(data));
-                showPieChart(pieChart, (HashMap<String, Integer>) data.get("attended"));
+                HashMap<String, Integer> tempData = new HashMap<>();
+
+                tempData.put("Attended", (Integer) data.get("numAttended"));
+                tempData.put("Total", (Integer) data.get("numTotal"));
+
+                showPieChart(totalAttendancePieChart, tempData);
+                showPieChart(individualPieChart, (HashMap<String, Integer>) data.get("attended"));
                 try{
 
                     Integer numAttended = (Integer) data.get("numAttended");
@@ -229,7 +236,7 @@ public class DashboardFragment extends Fragment {
         params.height = totalHeight;
         expandableListOverview.setLayoutParams(params);
     }
-    private void showPieChart(PieChart pieChart, HashMap<String, Integer> attendance){
+    private void showPieChart(PieChart pieChart, HashMap<String, Integer> data){
 
         try{
 
@@ -247,10 +254,11 @@ public class DashboardFragment extends Fragment {
         colors.add(Color.parseColor("#3ca567"));
 
         //input data and fit data into pie chart entry
-        for(String type: attendance.keySet()){
+        for(String type: data.keySet()){
 //            Log.d("harsh", type);
-            pieEntries.add(new PieEntry(attendance.get(type).floatValue(), type));
+            pieEntries.add(new PieEntry(data.get(type).floatValue(), type));
         }
+
 
         //collecting the entries with label name
         PieDataSet pieDataSet = new PieDataSet(pieEntries,label);
