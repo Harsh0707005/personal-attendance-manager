@@ -88,9 +88,7 @@ public class DashboardFragment extends Fragment {
 
         firebase = new firebaseManage();
 
-//        {attended={BEE=14, EFE=8, EM=10, Maths-2=14, Mech. Workshop=4, BEE Lab=5, BME=11, BME Lab=5, Physics Lab=5, EL & EC Workshop=3, Physics=9, EM Lab=3}, numTotal=171, total={BEE=24, EFE=15, EM=16, Maths-2=32, Mech. Workshop=8, BEE Lab=7, BME Lab=8, BME=17, Physics Lab=9, EL & EC Workshop=9, EM Lab=8, Physics=18}, numAttended=91, classes=[EM Lab, BEE, Maths-2, Mech. Workshop, BME Lab, EFE, BME, Physics, EL & EC Workshop, EM, Physics Lab, BEE Lab]}
-
-//        pieChart = rootView.findViewById(R.id.pieChart_view);
+        pieChart = rootView.findViewById(R.id.pieChart_view);
 
         loadSpinner(uid, scheduleSpinner, expandableListOverview);
         return rootView;
@@ -117,8 +115,6 @@ public class DashboardFragment extends Fragment {
                 spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
                     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-//                        Log.d("harsh", String.valueOf(position));
-//                        Log.d("harsh", String.valueOf(data.get(position)));
                         showData(uid, data.get(position).get("uniqueId").toString(), expandableListOverview);
                     }
 
@@ -131,6 +127,9 @@ public class DashboardFragment extends Fragment {
         });
     }
     private void showData(String uid, String uniqueId, ExpandableListView expandableListOverview){
+
+//        {attended={BEE=14, EFE=8, EM=10, Maths-2=14, Mech. Workshop=4, BEE Lab=5, BME=11, BME Lab=5, Physics Lab=5, EL & EC Workshop=3, Physics=9, EM Lab=3}, numTotal=171, total={BEE=24, EFE=15, EM=16, Maths-2=32, Mech. Workshop=8, BEE Lab=7, BME Lab=8, BME=17, Physics Lab=9, EL & EC Workshop=9, EM Lab=8, Physics=18}, numAttended=91, classes=[EM Lab, BEE, Maths-2, Mech. Workshop, BME Lab, EFE, BME, Physics, EL & EC Workshop, EM, Physics Lab, BEE Lab]}
+
         firebase.getAttendanceDate(String.format("attendance/%s/%s", uid, uniqueId), new HashMapObjectCallback() {
             @Override
             public void onCallback(HashMap<String, Object> data) {
@@ -141,7 +140,7 @@ public class DashboardFragment extends Fragment {
                 }catch(Exception e){
                     Log.d("harsh", e.getMessage());
                 }
-//                showPieChart(pieChart, (HashMap<String, Integer>) data.get("attended"));
+                showPieChart(pieChart, (HashMap<String, Integer>) data.get("attended"));
             }
         });
     }
