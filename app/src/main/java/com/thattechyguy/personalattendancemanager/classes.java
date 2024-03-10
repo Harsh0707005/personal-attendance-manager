@@ -24,6 +24,8 @@ public class classes extends AppCompatActivity {
 
         expandableClasses = findViewById(R.id.expandableClasses);
 
+        expandableClasses.setIndicatorBounds(50, 0);
+
         Intent i = getIntent();
         String path = i.getStringExtra("path");
 

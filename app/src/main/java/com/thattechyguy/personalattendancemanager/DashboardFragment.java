@@ -85,6 +85,8 @@ public class DashboardFragment extends Fragment {
 
         ExpandableListView expandableListOverview = rootView.findViewById(R.id.expandableListOverview);
 
+        expandableListOverview.setIndicatorBounds(50, 0);
+
         mAuth = FirebaseAuth.getInstance();
         uid = mAuth.getCurrentUser().getUid();
 
@@ -235,6 +237,7 @@ public class DashboardFragment extends Fragment {
 
         //collecting the entries with label name
         PieDataSet pieDataSet = new PieDataSet(pieEntries,label);
+        pieDataSet.setValueTextColor(Color.WHITE);
         //setting text size of the value
         pieDataSet.setValueTextSize(12f);
         //providing color list for coloring different entries
