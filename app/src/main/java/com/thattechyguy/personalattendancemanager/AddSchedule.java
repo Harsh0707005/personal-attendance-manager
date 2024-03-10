@@ -159,13 +159,16 @@ public class AddSchedule extends AppCompatActivity {
                     String classesNames = classesNamesEdittext.getText().toString();
 
                     List<String> classesList = Arrays.asList(classesNames.split("\\s*,\\s*"));
+//                    Log.d("harsh", classesList.toString());
 
-                    List<String> tempClasses = Arrays.asList(((EditText) findViewById(currentEdittext[0])).getText().toString().split("\\s*,\\s*"));
-                    String tempDay = ((Spinner) findViewById(currentSpinner[0])).getSelectedItem().toString();
+                    if (!((EditText) findViewById(currentEdittext[0])).getText().toString().isEmpty()){
+                        List<String> tempClasses = Arrays.asList(((EditText) findViewById(currentEdittext[0])).getText().toString().split("\\s*,\\s*"));
+                        String tempDay = ((Spinner) findViewById(currentSpinner[0])).getSelectedItem().toString();
 
-                    if(!tempClasses.isEmpty() && !classes.containsKey(tempDay)){
+                        if(!tempClasses.isEmpty() && !classes.containsKey(tempDay)){
 //                        Log.d("harsh", tempDay + " " + tempClasses + " " + classes + " " + classesNames + " " + scheduleName);
-                        classes.put(tempDay, tempClasses);
+                            classes.put(tempDay, tempClasses);
+                        }
                     }
 
                     if(!scheduleName.isEmpty() && !classesNames.isEmpty() && !classes.isEmpty()){
