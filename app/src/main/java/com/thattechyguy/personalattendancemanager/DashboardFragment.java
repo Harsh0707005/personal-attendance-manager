@@ -10,6 +10,8 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -48,6 +50,8 @@ public class DashboardFragment extends Fragment {
     private int totalHeight;
     private TextView numAttendedTextView, numTotalTextView, numPercentTextView;
     private View rootView;
+    private RelativeLayout dataLayout;
+    private ProgressBar progressBar;
 
     public DashboardFragment() {
         // Required empty public constructor
@@ -91,6 +95,8 @@ public class DashboardFragment extends Fragment {
         numPercentTextView = rootView.findViewById(R.id.numPercentTextView);
         totalAttendancePieChart = rootView.findViewById(R.id.totalAttendancePieChart);
         individualPieChart = rootView.findViewById(R.id.individualPieChart);
+        dataLayout = rootView.findViewById(R.id.dataLayout);
+        progressBar = rootView.findViewById(R.id.progressBar);
 
         ExpandableListView expandableListOverview = rootView.findViewById(R.id.expandableListOverview);
 
@@ -127,6 +133,7 @@ public class DashboardFragment extends Fragment {
                 spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
                     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                        contentInvisible();
                         showData(uid, data.get(position).get("uniqueId").toString(), expandableListOverview);
                     }
 
@@ -199,7 +206,7 @@ public class DashboardFragment extends Fragment {
                             expandableListOverview.setLayoutParams(params);
                         }
                     });
-
+                    contentVisible();
                     adjustHeight(expandableListOverview);
                 }catch(Exception e){
                     Log.d("harsh", e.getMessage());
@@ -236,6 +243,17 @@ public class DashboardFragment extends Fragment {
         params.height = totalHeight;
         expandableListOverview.setLayoutParams(params);
     }
+    private void contentVisible(){
+        scheduleSpinner.setVisibility(View.VISIBLE);
+        dataLayout.setVisibility(View.VISIBLE);
+        progressBar.setVisibility(View.GONE);
+    }
+    private void contentInvisible(){
+        scheduleSpinner.setVisibility(View.INVISIBLE);
+        dataLayout.setVisibility(View.INVISIBLE);
+        progressBar.setVisibility(View.VISIBLE);
+    }
+
     private void showPieChart(PieChart pieChart, HashMap<String, Integer> data){
 
         try{

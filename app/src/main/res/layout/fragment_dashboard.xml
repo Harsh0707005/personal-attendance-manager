@@ -7,12 +7,24 @@
     tools:context=".DashboardFragment"
     android:padding="5dp">
 
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:indeterminate="true"
+        android:indeterminateDrawable="@drawable/blue_progress_bg"
+        android:layout_centerInParent="true"
+        android:elevation="10dp"
+        />
+
     <Spinner
         android:id="@+id/scheduleSpinner"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_margin="15dp"/>
+        android:layout_margin="15dp"
+        android:visibility="invisible"/>
 
     <ScrollView
         android:layout_width="match_parent"
@@ -20,8 +32,10 @@
         android:layout_below="@id/scheduleSpinner">
 
         <RelativeLayout
+            android:id="@+id/dataLayout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:visibility="invisible">
 
             <com.github.mikephil.charting.charts.PieChart
                 android:id="@+id/totalAttendancePieChart"
