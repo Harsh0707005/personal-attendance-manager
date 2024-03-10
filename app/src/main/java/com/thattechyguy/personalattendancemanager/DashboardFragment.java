@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.Spinner;
 
@@ -43,6 +44,7 @@ public class DashboardFragment extends Fragment {
     private FirebaseAuth mAuth;
     private firebaseManage firebase;
     private PieChart pieChart;
+    private int totalHeight;
 
     public DashboardFragment() {
         // Required empty public constructor
@@ -134,15 +136,79 @@ public class DashboardFragment extends Fragment {
             @Override
             public void onCallback(HashMap<String, Object> data) {
 //                Log.d("harsh", String.valueOf(data));
+                showPieChart(pieChart, (HashMap<String, Integer>) data.get("attended"));
                 try{
                     expandableOverviewAdapter adapter = new expandableOverviewAdapter(getContext(), data);
                     expandableListOverview.setAdapter(adapter);
+
+
+                    expandableListOverview.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
+                        @Override
+                        public void onGroupExpand(int groupPosition) {
+                            int temp_height = totalHeight;
+                            ExpandableListAdapter listAdapter = expandableListOverview.getExpandableListAdapter();
+                            View childView = listAdapter.getChildView(groupPosition, 0, false, null, expandableListOverview);
+                            childView.measure(
+                                    View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
+                                    View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+                            totalHeight += childView.getMeasuredHeight(); // increasing height
+
+                            ViewGroup.LayoutParams params = expandableListOverview.getLayoutParams();
+                            params.height = totalHeight;
+                            expandableListOverview.setLayoutParams(params);
+                        }
+                    });
+                    expandableListOverview.setOnGroupCollapseListener(new ExpandableListView.OnGroupCollapseListener() {
+                        @Override
+                        public void onGroupCollapse(int groupPosition) {
+                            ExpandableListAdapter listAdapter = expandableListOverview.getExpandableListAdapter();
+                            View childView = listAdapter.getChildView(groupPosition, 0, false, null, expandableListOverview);
+                            childView.measure(
+                                    View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
+                                    View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+                            totalHeight -= childView.getMeasuredHeight(); // reducing the height
+
+                            ViewGroup.LayoutParams params = expandableListOverview.getLayoutParams();
+                            params.height = totalHeight;
+                            expandableListOverview.setLayoutParams(params);
+                        }
+                    });
+
+                    adjustHeight(expandableListOverview);
                 }catch(Exception e){
                     Log.d("harsh", e.getMessage());
                 }
-                showPieChart(pieChart, (HashMap<String, Integer>) data.get("attended"));
             }
         });
+    }
+    private void adjustHeight(ExpandableListView expandableListOverview){
+        ExpandableListAdapter listAdapter = expandableListOverview.getExpandableListAdapter();
+        if (listAdapter == null) {
+            return;
+        }
+        totalHeight = 0;
+        int numberOfGroups = listAdapter.getGroupCount();
+        for (int i = 0; i < numberOfGroups; i++) {
+            View groupView = listAdapter.getGroupView(i, false, null, expandableListOverview);
+            groupView.measure(
+                    View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
+                    View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+            totalHeight += groupView.getMeasuredHeight();
+
+            if (expandableListOverview.isGroupExpanded(i)) {
+                View childView = listAdapter.getChildView(i, 0, false, null, expandableListOverview);
+                childView.measure(
+                        View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
+                        View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+                totalHeight += childView.getMeasuredHeight();
+            }
+        }
+
+        totalHeight += expandableListOverview.getDividerHeight() * (numberOfGroups - 1);
+
+        ViewGroup.LayoutParams params = expandableListOverview.getLayoutParams();
+        params.height = totalHeight;
+        expandableListOverview.setLayoutParams(params);
     }
     private void showPieChart(PieChart pieChart, HashMap<String, Integer> attendance){
 

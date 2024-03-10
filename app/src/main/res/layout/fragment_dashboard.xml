@@ -13,18 +13,29 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_margin="15dp"/>
-
-    <com.github.mikephil.charting.charts.PieChart
-        android:id="@+id/pieChart_view"
-        android:layout_width="match_parent"
-        android:layout_height="400dp" />
-
-    <ExpandableListView
-        android:id="@+id/expandableListOverview"
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="20dp"
-        android:layoutDirection="rtl"
-        android:layout_below="@id/pieChart_view"/>
+        android:layout_below="@id/scheduleSpinner">
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.github.mikephil.charting.charts.PieChart
+            android:id="@+id/pieChart_view"
+            android:layout_width="match_parent"
+            android:layout_height="400dp" />
+
+        <ExpandableListView
+            android:id="@+id/expandableListOverview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="20dp"
+            android:layoutDirection="rtl"
+            android:layout_below="@id/pieChart_view"
+            android:scrollbars="none"
+            />
+    </RelativeLayout>
+    </ScrollView>
 </RelativeLayout>
