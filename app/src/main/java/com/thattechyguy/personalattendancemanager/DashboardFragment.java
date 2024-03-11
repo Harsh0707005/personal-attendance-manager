@@ -144,8 +144,8 @@ public class DashboardFragment extends Fragment {
         firebase.getScheduleData(uid, new ArraylistHashMapCallback() {
             @Override
             public void onCallback(ArrayList<HashMap<String, Object>> data) {
-                Log.d("harsh", String.valueOf(data));
-                Log.d("harsh", String.valueOf(data.isEmpty()));
+//                Log.d("harsh", String.valueOf(data));
+//                Log.d("harsh", String.valueOf(data.isEmpty()));
 
                 if (data.isEmpty()){
                     noDataLayout.setVisibility(View.VISIBLE);
