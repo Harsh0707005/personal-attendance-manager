@@ -115,7 +115,15 @@ public class expandableOverviewAdapter extends BaseExpandableListAdapter {
             Integer numTotal = getChild(groupPosition, childPosition).get("numTotal");
             String percent = String.valueOf((numAttended*100)/numTotal);
 
-            showPieChart(classPie, getChild(groupPosition, childPosition));
+            HashMap<String, Integer> attendancePieData = new HashMap<>();
+            attendancePieData.put("Attended", numAttended);
+            attendancePieData.put("Absent", numTotal-numAttended);
+
+//            Log.d("harsh", String.valueOf(attendancePieData));
+
+            showPieChart(classPie, attendancePieData);
+
+//            attendancePieData.clear();
             numAttendedTextView.setText(numAttended.toString());
             numTotalTextView.setText(numTotal.toString());
             numPercentTextView.setText(percent+"%");
@@ -152,8 +160,7 @@ public class expandableOverviewAdapter extends BaseExpandableListAdapter {
 
             //input data and fit data into pie chart entry
             for(String type: attendance.keySet()){
-                if (type.equals("numAttended")) pieEntries.add(new PieEntry(attendance.get(type).floatValue(), "Attended"));
-                if (type.equals("numTotal")) pieEntries.add(new PieEntry(attendance.get(type).floatValue(), "Total"));
+                pieEntries.add(new PieEntry(attendance.get(type).floatValue(), type));
             }
 
             //collecting the entries with label name

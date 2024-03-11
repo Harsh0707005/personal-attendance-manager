@@ -188,8 +188,10 @@ public class DashboardFragment extends Fragment {
                 }
                 HashMap<String, Integer> tempData = new HashMap<>();
 
+                // TODO: make change so piechart comprises of total and attendance
+
                 tempData.put("Attended", (Integer) data.get("numAttended"));
-                tempData.put("Total", (Integer) data.get("numTotal"));
+                tempData.put("Absent", (Integer) data.get("numTotal") - (Integer) data.get("numAttended"));
 
                 showPieChart(totalAttendancePieChart, tempData);
                 showPieChart(individualPieChart, (HashMap<String, Integer>) data.get("attended"));
