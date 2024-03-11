@@ -6,16 +6,49 @@
     android:layout_height="match_parent"
     tools:context=".classes">
 
+    <LinearLayout
+        android:id="@+id/nextDateLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="19dp"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@+id/expandableClasses"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed">
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Next Class on "
+            tools:layout_editor_absoluteX="132dp"
+            android:textSize="15sp"
+            android:textColor="@color/light_blue"
+            android:textStyle="bold"
+            tools:layout_editor_absoluteY="356dp" />
+
+        <TextView
+            android:id="@+id/nextDateTextview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textSize="15sp"
+            android:textColor="@color/light_blue"
+            android:textStyle="bold"
+            tools:layout_editor_absoluteX="236dp"
+            tools:layout_editor_absoluteY="356dp" />
+    </LinearLayout>
+
     <ExpandableListView
         android:id="@+id/expandableClasses"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layoutDirection="rtl"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.5" />
+        app:layout_constraintTop_toBottomOf="@+id/nextDateLayout" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

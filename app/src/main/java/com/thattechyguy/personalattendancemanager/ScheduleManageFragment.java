@@ -121,7 +121,7 @@ public class ScheduleManageFragment extends Fragment {
         firebase.getScheduleData(uid, new ArraylistHashMapCallback() {
             @Override
             public void onCallback(ArrayList<HashMap<String, Object>> data) {
-                Log.d("harsh", String.valueOf(data));
+//                Log.d("harsh", String.valueOf(data));
                 if (data.isEmpty()){
                     schedulesRecyclerView.setVisibility(View.INVISIBLE);
                     noScheduleLayout.setVisibility(View.VISIBLE);

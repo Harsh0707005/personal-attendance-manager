@@ -6,16 +6,20 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ExpandableListView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.thattechyguy.personalattendancemanager.Interfaces.ArraylistHashMapCallback;
 import com.thattechyguy.personalattendancemanager.Interfaces.intSuccessCallback;
+import com.thattechyguy.personalattendancemanager.Interfaces.stringCallback;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class classes extends AppCompatActivity {
     private ExpandableListView expandableClasses;
-    expandableClassesAdapter expandableClassesAdapter;
+    private expandableClassesAdapter expandableClassesAdapter;
+    private TextView nextDateTextview;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,6 +27,7 @@ public class classes extends AppCompatActivity {
         setContentView(R.layout.activity_classes);
 
         expandableClasses = findViewById(R.id.expandableClasses);
+        nextDateTextview = findViewById(R.id.nextDateTextview);
 
         expandableClasses.setIndicatorBounds(50, 0);
 
@@ -32,17 +37,22 @@ public class classes extends AppCompatActivity {
         firebaseManage firebase = new firebaseManage();
 
         try{
-            firebase.getLastAddedDate(path, new intSuccessCallback() {
+            firebase.getLastAddedDate(path, new stringCallback() {
                 @Override
-                public void onCallback(int success) {
+                public void onCallback(String nextDate) {
+//                    Log.d("harsh", String.valueOf(success));
+//                    Toast.makeText(classes.this, nextDate, Toast.LENGTH_SHORT).show();
                     firebase.getClassData(path, new ArraylistHashMapCallback() {
                         @Override
                         public void onCallback(ArrayList<HashMap<String, Object>> data) {
+                            nextDateTextview.setText(nextDate);
                             ArrayList<HashMap<String, Object>> classDays = new ArrayList<HashMap<String, Object>>();
                             ArrayList<HashMap<String, Object>> dataList = new ArrayList<>();
-//                Log.d("harsh", String.valueOf(data));
+
+//                            Log.d("harsh", String.valueOf(data));
+
                             for(HashMap<String, Object> item:data){
-//                        Log.d("harsh", String.valueOf(item));
+//                                Log.d("harsh", String.valueOf(item));
                                 if (!item.containsKey("dailyClasses")){
                                     dataList.add(item);
                                 }

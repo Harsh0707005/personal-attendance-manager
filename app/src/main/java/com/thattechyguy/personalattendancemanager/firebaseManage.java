@@ -19,8 +19,10 @@ import com.thattechyguy.personalattendancemanager.Interfaces.ArraylistHashMapCal
 import com.thattechyguy.personalattendancemanager.Interfaces.HashMapObjectCallback;
 import com.thattechyguy.personalattendancemanager.Interfaces.booleanSuccessCallback;
 import com.thattechyguy.personalattendancemanager.Interfaces.intSuccessCallback;
+import com.thattechyguy.personalattendancemanager.Interfaces.stringCallback;
 
 import java.text.DateFormat;
+import java.text.DateFormatSymbols;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -266,14 +268,14 @@ public class firebaseManage {
             }
         });
     }
-    public void getLastAddedDate(String path, intSuccessCallback myCallback) {
+    public void getLastAddedDate(String path, stringCallback myCallback) {
 
         DatabaseReference classRef = FirebaseDatabase.getInstance().getReference(path);
         Query getDays = classRef.child("dailyClasses");
 
         ArrayList<String> days = new ArrayList<>();
 
-        getDays.addListenerForSingleValueEvent(new ValueEventListener() {
+        classRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
@@ -288,15 +290,28 @@ public class firebaseManage {
                                 try{
 //                                    Log.d("harsh", String.valueOf(dataSnapshot.getChildren().iterator().next().child("date").getValue()));
                                     String lastAddedDate = String.valueOf(dataSnapshot.getChildren().iterator().next().child("date").getValue());
-                                    Log.d("harsh", lastAddedDate);
-                                    calculateDates(path, lastAddedDate, ((HashMap<String, Object>) snapshot.getValue()).keySet(), ((HashMap<String, Object>) snapshot.getValue()), new intSuccessCallback() {
+//                                    Log.d("harsh", String.valueOf(lastAddedDate=="null"));
+
+//                                    Log.d("harsh", String.valueOf(snapshot.getValue()));
+
+                                    if (lastAddedDate.equals("null")){
+//                                        myCallback.onCallback(0);
+
+//                                        Log.d("harsh", timestampToDate((Long) ((HashMap<String, Object>) snapshot.getValue()).get("timestamp")));
+                                        lastAddedDate = timestampToDate((Long) ((HashMap<String, Object>) snapshot.getValue()).get("timestamp"));
+                                    }
+
+//                                    String finalLastAddedDate = lastAddedDate;
+                                    calculateDates(path, lastAddedDate, ((HashMap<String, Object>)((HashMap<String, Object>) snapshot.getValue()).get("dailyClasses")).keySet(), ((HashMap<String, Object>)((HashMap<String, Object>) snapshot.getValue()).get("dailyClasses")), new stringCallback() {
                                         @Override
-                                        public void onCallback(int success) {
-                                            if (success==1) {
-                                                myCallback.onCallback(1);
-                                            }else{
-                                                myCallback.onCallback(0);
-                                            }
+                                        public void onCallback(String str_data) {
+                                            calculateNextNearestDate(str_data, ((HashMap<String, Object>) ((HashMap<String, Object>) snapshot.getValue()).get("dailyClasses")).keySet(), new stringCallback() {
+                                                @Override
+                                                public void onCallback(String nextDate) {
+                                                    myCallback.onCallback(nextDate);
+                                                }
+                                            });
+//                                            myCallback.onCallback(1);
                                         }
                                     });
 //                    callback.onCallback();
@@ -325,7 +340,7 @@ public class firebaseManage {
             }
         });
     }
-    public ArrayList<HashMap<String, Object>> calculateDates(String path, String lastAddedDate, Set<String> days, HashMap<String, Object> classes, intSuccessCallback myCallback) {
+    public ArrayList<HashMap<String, Object>> calculateDates(String path, String lastAddedDate, Set<String> days, HashMap<String, Object> classes, stringCallback myCallback) {
         ArrayList<HashMap<String, Object>> dateList = new ArrayList<>();
         DateFormat dateFormat = new SimpleDateFormat("ddMMyyyy", Locale.ENGLISH);
         try{
@@ -378,6 +393,8 @@ public class firebaseManage {
                     item.put("day", calendarDay);
                     item.put("timestamp", String.valueOf(calendar.getTimeInMillis()));
 
+//                    lastAddedDate = dateFormat.format(calendar.getTime());
+
                     dateList.add(item);
 //                    Log.d("harsh", String.valueOf(dateList));
 //                    dateList.add(dateFormat.format(calendar.getTime()));
@@ -388,13 +405,15 @@ public class firebaseManage {
             Log.d("harsh", "calculate date " + e.getMessage());
         }
 //        Log.d("harsh", String.valueOf(dateList));
+        String finalLastAddedDate = lastAddedDate;
         pushClassData(path, dateList, classes, new intSuccessCallback() {
             @Override
             public void onCallback(int success) {
                 if (success==1) {
-                    myCallback.onCallback(1);
+//                    Log.d("harsh", "updated " + finalLastAddedDate);
+                    myCallback.onCallback(finalLastAddedDate);
                 }else{
-                    myCallback.onCallback(0);
+                    myCallback.onCallback("");
                 }
             }
         });
@@ -429,6 +448,64 @@ public class firebaseManage {
                     }
                 }
             });
+        }
+    }
+
+    public void calculateNextNearestDate(String lastAddedDate, Set<String> days, stringCallback myCallback) {
+        DateFormat dateFormat = new SimpleDateFormat("ddMMyyyy", Locale.ENGLISH);
+//        Log.d("harsh", lastAddedDate);
+        try {
+            Date startDate = dateFormat.parse(lastAddedDate);
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(startDate);
+            calendar.add(Calendar.DATE, 1);
+
+            Calendar todayCalendar = Calendar.getInstance();
+            Date todayDate = new Date();
+            String calendarDay = "";
+//            while (!days.contains(calendar.get(Calendar.DAY_OF_WEEK))) {
+            while (!days.contains(calendarDay)) {
+//                Log.d("harsh", String.valueOf(calendar.get(Calendar.DAY_OF_WEEK)));
+                int numDay = calendar.get(Calendar.DAY_OF_WEEK);
+                switch (numDay) {
+                    case Calendar.SUNDAY:
+                        calendarDay = "Sunday";
+                        break;
+                    case Calendar.MONDAY:
+                        calendarDay = "Monday";
+                        break;
+                    case Calendar.TUESDAY:
+                        calendarDay = "Tuesday";
+                        break;
+                    case Calendar.WEDNESDAY:
+                        calendarDay = "Wednesday";
+                        break;
+                    case Calendar.THURSDAY:
+                        calendarDay = "Thursday";
+                        break;
+                    case Calendar.FRIDAY:
+                        calendarDay = "Friday";
+                        break;
+                    case Calendar.SATURDAY:
+                        calendarDay = "Saturday";
+                        break;
+                    default:
+                        calendarDay = "Unknown";
+                }
+
+                calendar.add(Calendar.DATE, 1);
+            }
+            calendar.add(Calendar.DATE, -1);
+
+            int day = calendar.get(Calendar.DAY_OF_MONTH);
+            int month = calendar.get(Calendar.MONTH);
+            int year = calendar.get(Calendar.YEAR);
+
+//            Log.d("harsh", "date " + day + " " + new DateFormatSymbols().getMonths()[month] + " " + year);
+            myCallback.onCallback(day + " " + new DateFormatSymbols().getMonths()[month] + " " + year); // No suitable date found
+        } catch (Exception e) {
+            Log.d("harsh", "calculate next date " + e.getMessage());
+            myCallback.onCallback("");
         }
     }
 
@@ -526,5 +603,22 @@ public class firebaseManage {
                 }
             }
         });
+    }
+    public String timestampToDate(long timestamp) {
+        try {
+            // Create a DateFormatter object with the desired format
+            SimpleDateFormat formatter = new SimpleDateFormat("ddMMyyyy", Locale.getDefault());
+
+            // Create a calendar object and set the time in milliseconds
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTimeInMillis(timestamp);
+            calendar.add(Calendar.DATE, -1);
+
+            // Format the date using the formatter
+            return formatter.format(calendar.getTime());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }
