@@ -11,7 +11,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="19dp"
+        android:gravity="center"
         android:orientation="horizontal"
+        android:visibility="invisible"
         app:layout_constraintBottom_toTopOf="@+id/expandableClasses"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -22,11 +24,12 @@
             android:id="@+id/textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginVertical="10dp"
             android:text="Next Class on "
-            tools:layout_editor_absoluteX="132dp"
-            android:textSize="15sp"
             android:textColor="@color/light_blue"
+            android:textSize="15sp"
             android:textStyle="bold"
+            tools:layout_editor_absoluteX="132dp"
             tools:layout_editor_absoluteY="356dp" />
 
         <TextView
@@ -34,8 +37,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text=""
-            android:textSize="15sp"
             android:textColor="@color/light_blue"
+            android:textSize="15sp"
             android:textStyle="bold"
             tools:layout_editor_absoluteX="236dp"
             tools:layout_editor_absoluteY="356dp" />
@@ -46,6 +49,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layoutDirection="rtl"
+        android:paddingBottom="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

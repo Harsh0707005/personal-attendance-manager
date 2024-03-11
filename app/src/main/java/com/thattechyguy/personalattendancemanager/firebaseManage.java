@@ -393,7 +393,7 @@ public class firebaseManage {
                     item.put("day", calendarDay);
                     item.put("timestamp", String.valueOf(calendar.getTimeInMillis()));
 
-//                    lastAddedDate = dateFormat.format(calendar.getTime());
+                    lastAddedDate = dateFormat.format(calendar.getTime());
 
                     dateList.add(item);
 //                    Log.d("harsh", String.valueOf(dateList));
@@ -413,7 +413,7 @@ public class firebaseManage {
 //                    Log.d("harsh", "updated " + finalLastAddedDate);
                     myCallback.onCallback(finalLastAddedDate);
                 }else{
-                    myCallback.onCallback("");
+                    myCallback.onCallback(finalLastAddedDate);
                 }
             }
         });

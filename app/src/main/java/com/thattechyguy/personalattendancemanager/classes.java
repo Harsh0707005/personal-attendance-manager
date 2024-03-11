@@ -1,16 +1,16 @@
 package com.thattechyguy.personalattendancemanager;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.ExpandableListView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.thattechyguy.personalattendancemanager.Interfaces.ArraylistHashMapCallback;
-import com.thattechyguy.personalattendancemanager.Interfaces.intSuccessCallback;
 import com.thattechyguy.personalattendancemanager.Interfaces.stringCallback;
 
 import java.util.ArrayList;
@@ -20,6 +20,7 @@ public class classes extends AppCompatActivity {
     private ExpandableListView expandableClasses;
     private expandableClassesAdapter expandableClassesAdapter;
     private TextView nextDateTextview;
+    private LinearLayout nextDateLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,6 +28,7 @@ public class classes extends AppCompatActivity {
         setContentView(R.layout.activity_classes);
 
         expandableClasses = findViewById(R.id.expandableClasses);
+        nextDateLayout = findViewById(R.id.nextDateLayout);
         nextDateTextview = findViewById(R.id.nextDateTextview);
 
         expandableClasses.setIndicatorBounds(50, 0);
@@ -45,8 +47,7 @@ public class classes extends AppCompatActivity {
                     firebase.getClassData(path, new ArraylistHashMapCallback() {
                         @Override
                         public void onCallback(ArrayList<HashMap<String, Object>> data) {
-                            nextDateTextview.setText(nextDate);
-                            ArrayList<HashMap<String, Object>> classDays = new ArrayList<HashMap<String, Object>>();
+
                             ArrayList<HashMap<String, Object>> dataList = new ArrayList<>();
 
 //                            Log.d("harsh", String.valueOf(data));
@@ -59,6 +60,8 @@ public class classes extends AppCompatActivity {
                             }
                             expandableClassesAdapter = new expandableClassesAdapter(classes.this, dataList, path);
                             expandableClasses.setAdapter(expandableClassesAdapter);
+                            nextDateLayout.setVisibility(View.VISIBLE);
+                            nextDateTextview.setText(nextDate);
 //                Log.d("harsh", String.valueOf(data));
                         }
                     });
