@@ -193,8 +193,27 @@ public class DashboardFragment extends Fragment {
                 tempData.put("Attended", (Integer) data.get("numAttended"));
                 tempData.put("Absent", (Integer) data.get("numTotal") - (Integer) data.get("numAttended"));
 
+//                Log.d("harsh", String.valueOf(tempData));
                 showPieChart(totalAttendancePieChart, tempData);
-                showPieChart(individualPieChart, (HashMap<String, Integer>) data.get("attended"));
+
+//                Log.d("harsh", String.valueOf(((HashMap<String, Integer>)data.get("attended")).isEmpty()));
+//                Log.d("harsh", String.valueOf(((HashMap<String, Integer>)data.get("attended"))));
+
+                boolean noAttended = true;
+
+                try{
+
+                    for(String temp_class: ((HashMap<String, Integer>) data.get("attended")).keySet()){
+                        if (((Integer) ((HashMap<String, Integer>) data.get("attended")).get(temp_class))!=0){
+                            noAttended = false;
+                        }
+                    }
+                    if (!noAttended) {
+                        showPieChart(individualPieChart, (HashMap<String, Integer>) data.get("attended"));
+                    }
+                }catch(Exception e){
+                    Log.d("harsh", e.getMessage());
+                }
                 try{
 
                     Integer numAttended = (Integer) data.get("numAttended");

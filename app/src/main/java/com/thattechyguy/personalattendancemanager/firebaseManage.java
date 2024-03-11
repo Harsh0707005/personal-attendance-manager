@@ -467,6 +467,9 @@ public class firebaseManage {
                                         count = ((HashMap<String, Integer>) attendance.get("total")).get(temp);
                                     }
                                     ((HashMap<String, Integer>) attendance.get("total")).put(temp, count + 1);
+                                    if (!((HashMap<String, Integer>) attendance.get("attended")).containsKey(temp)) {
+                                        ((HashMap<String, Integer>) attendance.get("attended")).put(temp, 0);
+                                    }
                                     numTotal = numTotal + 1;
 
                                 }catch(Exception e){
