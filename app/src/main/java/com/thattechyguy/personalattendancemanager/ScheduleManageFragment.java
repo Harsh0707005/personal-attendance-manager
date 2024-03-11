@@ -7,9 +7,11 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -36,6 +38,9 @@ public class ScheduleManageFragment extends Fragment {
     private ArrayList<HashMap<String, Object>> dataList;
     private FirebaseAuth mAuth;
     private String uid;
+    private LinearLayout noScheduleLayout;
+    private RecyclerView schedulesRecyclerView;
+    private TextView addScheduleButton, gotoAddSchedule;
 
     public ScheduleManageFragment() {
         // Required empty public constructor
@@ -72,8 +77,18 @@ public class ScheduleManageFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_schedule_manage, container, false);
 
-        TextView addScheduleButton = rootView.findViewById(R.id.addScheduleButton);
-        RecyclerView schedulesRecyclerView = rootView.findViewById(R.id.schedulesRecyclerView);
+        addScheduleButton = rootView.findViewById(R.id.addScheduleButton);
+        schedulesRecyclerView = rootView.findViewById(R.id.schedulesRecyclerView);
+        noScheduleLayout = rootView.findViewById(R.id.noScheduleLayout);
+        gotoAddSchedule = rootView.findViewById(R.id.gotoAddSchedule);
+
+        gotoAddSchedule.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(rootView.getContext(), AddSchedule.class);
+                startActivity(i);
+            }
+        });
 
         mAuth = FirebaseAuth.getInstance();
         uid = mAuth.getCurrentUser().getUid();
@@ -105,9 +120,16 @@ public class ScheduleManageFragment extends Fragment {
         firebase.getScheduleData(uid, new ArraylistHashMapCallback() {
             @Override
             public void onCallback(ArrayList<HashMap<String, Object>> data) {
-                dataList.clear(); // Clear existing data
-                dataList.addAll(data); // Add new data
-                adapter.notifyDataSetChanged();
+                if (data.isEmpty()){
+                    schedulesRecyclerView.setVisibility(View.INVISIBLE);
+                    noScheduleLayout.setVisibility(View.VISIBLE);
+                }else {
+                    schedulesRecyclerView.setVisibility(View.VISIBLE);
+                    noScheduleLayout.setVisibility(View.GONE);
+                    dataList.clear(); // Clear existing data
+                    dataList.addAll(data); // Add new data
+                    adapter.notifyDataSetChanged();
+                }
             }
         });
     }
