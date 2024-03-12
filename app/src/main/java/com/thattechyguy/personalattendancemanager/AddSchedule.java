@@ -1,13 +1,20 @@
 package com.thattechyguy.personalattendancemanager;
 
-import androidx.appcompat.app.AppCompatActivity;
+import static androidx.core.content.ContentProviderCompat.requireContext;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
+
+import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
@@ -16,14 +23,17 @@ import android.widget.Toast;
 import com.google.firebase.auth.FirebaseAuth;
 import com.thattechyguy.personalattendancemanager.Interfaces.intSuccessCallback;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 
 public class AddSchedule extends AppCompatActivity {
 
-    private EditText scheduleNameEdittext, scheduleDescriptionEdittext, classesNamesEdittext;
+    private EditText scheduleNameEdittext, scheduleDescriptionEdittext, classesNamesEdittext, pickDate;
     private Button addSchedule, addDay;
     private LinearLayout classesLayout;
     private Spinner daysSpinner;
@@ -42,6 +52,21 @@ public class AddSchedule extends AppCompatActivity {
         addSchedule = findViewById(R.id.addSchedule);
         daysSpinner = findViewById(R.id.daysSpinner);
         classesLayout = findViewById(R.id.classesLayout);
+        pickDate = findViewById(R.id.pickDate);
+
+        Calendar calendar = Calendar.getInstance();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+        String currentDate = dateFormat.format(calendar.getTime());
+
+        // Set current date as default in EditText
+        pickDate.setText(currentDate);
+
+        pickDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDatePickerDialog();
+            }
+        });
 
         String[] daysStringArray = {"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"};
         List<String> daysArray = new ArrayList<String>(Arrays.asList(daysStringArray));
@@ -61,7 +86,7 @@ public class AddSchedule extends AppCompatActivity {
         addDay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!((EditText) findViewById(currentEdittext[0])).getText().toString().isEmpty()){
+                if (!((EditText) findViewById(currentEdittext[0])).getText().toString().isEmpty()) {
                     List<String> classesList = Arrays.asList(((EditText) findViewById(currentEdittext[0])).getText().toString().split("\\s*,\\s*"));
 
                     String selectedDay = ((Spinner) findViewById(currentSpinner[0])).getSelectedItem().toString();
@@ -72,7 +97,7 @@ public class AddSchedule extends AppCompatActivity {
                     daysArray.remove(selectedDay);
 
 //                    Log.d("harsh", String.valueOf(classes));
-                    if (daysArray.isEmpty()){
+                    if (daysArray.isEmpty()) {
                         ((Spinner) findViewById(currentSpinner[0])).setEnabled(false);
                         ((EditText) findViewById(currentEdittext[0])).setEnabled(false);
                         addDay.setVisibility(View.GONE);
@@ -97,7 +122,7 @@ public class AddSchedule extends AppCompatActivity {
                     currentEdittext[0] = editText.getId();
                     currentSpinner[0] = spinner.getId();
 
-                }else{
+                } else {
                     Toast.makeText(AddSchedule.this, "Classes cannot be Empty", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -153,7 +178,7 @@ public class AddSchedule extends AppCompatActivity {
         addSchedule.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                try{
+                try {
                     String scheduleName = scheduleNameEdittext.getText().toString();
                     String scheduleDescription = scheduleDescriptionEdittext.getText().toString();
                     String classesNames = classesNamesEdittext.getText().toString();
@@ -161,37 +186,59 @@ public class AddSchedule extends AppCompatActivity {
                     List<String> classesList = Arrays.asList(classesNames.split("\\s*,\\s*"));
 //                    Log.d("harsh", classesList.toString());
 
-                    if (!((EditText) findViewById(currentEdittext[0])).getText().toString().isEmpty()){
+                    if (!((EditText) findViewById(currentEdittext[0])).getText().toString().isEmpty()) {
                         List<String> tempClasses = Arrays.asList(((EditText) findViewById(currentEdittext[0])).getText().toString().split("\\s*,\\s*"));
                         String tempDay = ((Spinner) findViewById(currentSpinner[0])).getSelectedItem().toString();
 
-                        if(!tempClasses.isEmpty() && !classes.containsKey(tempDay)){
+                        if (!tempClasses.isEmpty() && !classes.containsKey(tempDay)) {
 //                        Log.d("harsh", tempDay + " " + tempClasses + " " + classes + " " + classesNames + " " + scheduleName);
                             classes.put(tempDay, tempClasses);
                         }
                     }
 
-                    if(!scheduleName.isEmpty() && !classesNames.isEmpty() && !classes.isEmpty()){
+                    if (!scheduleName.isEmpty() && !classesNames.isEmpty() && !classes.isEmpty()) {
                         firebase.addSchedule(uid, scheduleName, scheduleDescription, classes, new intSuccessCallback() {
                             @Override
                             public void onCallback(int success) {
-                                if (success==1){
+                                if (success == 1) {
                                     Toast.makeText(AddSchedule.this, "Schedule Added Successfully", Toast.LENGTH_SHORT).show();
                                     finish();
-                                }else{
+                                } else {
                                     Toast.makeText(AddSchedule.this, "Error Adding Schedule", Toast.LENGTH_SHORT).show();
                                     finish();
                                 }
                             }
                         });
-                    }else{
+                    } else {
                         Toast.makeText(AddSchedule.this, "Schedule Data cannot be Empty!!!", Toast.LENGTH_SHORT).show();
                     }
-                }catch(Exception e){
+                } catch (Exception e) {
                     Log.d("harsh", "add " + e.getMessage());
                 }
             }
         });
 
+    }
+    private void showDatePickerDialog() {
+        // Get current date
+        final Calendar calendar = Calendar.getInstance();
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
+
+        // Create DatePickerDialog and show it
+        DatePickerDialog datePickerDialog = new DatePickerDialog(
+                AddSchedule.this,
+                new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                        // Display the selected date in EditText
+                        String selectedDate = dayOfMonth + "/" + (month + 1) + "/" + year;
+                        pickDate.setText(selectedDate);
+                    }
+                },
+                year, month, dayOfMonth
+        );
+        datePickerDialog.show();
     }
 }
