@@ -54,12 +54,23 @@ public class AddSchedule extends AppCompatActivity {
         classesLayout = findViewById(R.id.classesLayout);
         pickDate = findViewById(R.id.pickDate);
 
+//        Calendar calendar = Calendar.getInstance();
+//        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+//        String currentDate = dateFormat.format(calendar.getTime());
+//
+//        // Set current date as default in EditText
+//        pickDate.setText(currentDate);
+
         Calendar calendar = Calendar.getInstance();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
-        String currentDate = dateFormat.format(calendar.getTime());
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
+
+        // Format current date with leading zeros
+        String formattedDate = String.format(Locale.getDefault(), "%02d/%02d/%04d", dayOfMonth, month + 1, year);
 
         // Set current date as default in EditText
-        pickDate.setText(currentDate);
+        pickDate.setText(formattedDate);
 
         pickDate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -67,6 +78,7 @@ public class AddSchedule extends AppCompatActivity {
                 showDatePickerDialog();
             }
         });
+
 
         String[] daysStringArray = {"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"};
         List<String> daysArray = new ArrayList<String>(Arrays.asList(daysStringArray));
@@ -181,6 +193,7 @@ public class AddSchedule extends AppCompatActivity {
                 try {
                     String scheduleName = scheduleNameEdittext.getText().toString();
                     String scheduleDescription = scheduleDescriptionEdittext.getText().toString();
+                    String startDate = pickDate.getText().toString().replace("/", "");
                     String classesNames = classesNamesEdittext.getText().toString();
 
                     List<String> classesList = Arrays.asList(classesNames.split("\\s*,\\s*"));
@@ -197,7 +210,7 @@ public class AddSchedule extends AppCompatActivity {
                     }
 
                     if (!scheduleName.isEmpty() && !classesNames.isEmpty() && !classes.isEmpty()) {
-                        firebase.addSchedule(uid, scheduleName, scheduleDescription, classes, new intSuccessCallback() {
+                        firebase.addSchedule(uid, scheduleName, scheduleDescription, startDate, classes, new intSuccessCallback() {
                             @Override
                             public void onCallback(int success) {
                                 if (success == 1) {
@@ -233,7 +246,7 @@ public class AddSchedule extends AppCompatActivity {
                     @Override
                     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                         // Display the selected date in EditText
-                        String selectedDate = dayOfMonth + "/" + (month + 1) + "/" + year;
+                        String selectedDate = String.format(Locale.getDefault(), "%02d/%02d/%04d", dayOfMonth, month + 1, year);
                         pickDate.setText(selectedDate);
                     }
                 },

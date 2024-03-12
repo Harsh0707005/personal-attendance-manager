@@ -74,7 +74,7 @@ public class firebaseManage {
             }
         });
     }
-    public void addSchedule(String uid, String scheduleName, String scheduleDescription, HashMap<String, Object> classes, intSuccessCallback myCallback){
+    public void addSchedule(String uid, String scheduleName, String scheduleDescription, String startDate, HashMap<String, Object> classes, intSuccessCallback myCallback){
         mDatabase = firebaseDatabase.getReference("attendance");
 
 
@@ -83,6 +83,7 @@ public class firebaseManage {
         HashMap<String, Object> metaData = new HashMap<>();
         metaData.put("Name", scheduleName);
         metaData.put("description", scheduleDescription);
+        metaData.put("startDate", startDate);
         metaData.put("dailyClasses", classes);
         metaData.put("attended", 0);
         metaData.put("total", 0);
@@ -298,7 +299,22 @@ public class firebaseManage {
 //                                        myCallback.onCallback(0);
 
 //                                        Log.d("harsh", timestampToDate((Long) ((HashMap<String, Object>) snapshot.getValue()).get("timestamp")));
-                                        lastAddedDate = timestampToDate((Long) ((HashMap<String, Object>) snapshot.getValue()).get("timestamp"));
+//                                        lastAddedDate = timestampToDate((Long) ((HashMap<String, Object>) snapshot.getValue()).get("timestamp"));
+
+                                        lastAddedDate = ((HashMap<String, Object>) snapshot.getValue()).get("startDate").toString();
+
+                                        DateFormat dateFormat = new SimpleDateFormat("ddMMyyyy", Locale.ENGLISH);
+
+                                        Date startDate = dateFormat.parse(lastAddedDate);
+
+                                        Calendar calendar = Calendar.getInstance();
+
+                                        calendar.setTime(startDate);
+                                        calendar.add(Calendar.DATE, -1);
+
+                                        SimpleDateFormat df = new SimpleDateFormat("ddMMyyyy", Locale.getDefault());
+                                        lastAddedDate = df.format(calendar.getTime());
+
                                     }
 
 //                                    String finalLastAddedDate = lastAddedDate;
