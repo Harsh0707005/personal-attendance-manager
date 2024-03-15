@@ -208,6 +208,13 @@ public class expandableClassesAdapter extends BaseExpandableListAdapter {
                 button.setId(id);
                 buttonIds.add(id);
 
+                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.MATCH_PARENT
+                );
+                params.setMargins(20,20,20,20);
+                button.setLayoutParams(params);
+
                 if (attendedClasses.contains(className.toString())){
                     selectButton(button);
                 }

@@ -6,6 +6,7 @@ android:id="@+id/classNameBtn"
 android:layout_width="wrap_content"
 android:layout_height="wrap_content"
 android:textAllCaps="false"
+    android:layout_margin="10dp"
 android:background="@drawable/rounded_blue_border_button"
 android:foreground="?attr/selectableItemBackground"
     />
