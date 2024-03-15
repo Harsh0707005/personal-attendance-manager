@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ExpandableListView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -21,6 +22,7 @@ public class classes extends AppCompatActivity {
     private expandableClassesAdapter expandableClassesAdapter;
     private TextView nextDateTextview;
     private LinearLayout nextDateLayout;
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +32,7 @@ public class classes extends AppCompatActivity {
         expandableClasses = findViewById(R.id.expandableClasses);
         nextDateLayout = findViewById(R.id.nextDateLayout);
         nextDateTextview = findViewById(R.id.nextDateTextview);
+        progressBar = findViewById(R.id.progressBar);
 
         expandableClasses.setIndicatorBounds(50, 0);
 
@@ -62,6 +65,8 @@ public class classes extends AppCompatActivity {
                             expandableClasses.setAdapter(expandableClassesAdapter);
                             nextDateLayout.setVisibility(View.VISIBLE);
                             nextDateTextview.setText(nextDate);
+                            progressBar.setVisibility(View.GONE);
+
 //                Log.d("harsh", String.valueOf(data));
                         }
                     });
