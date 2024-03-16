@@ -3,9 +3,13 @@ package com.thattechyguy.personalattendancemanager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.WindowManager;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -21,7 +25,7 @@ import com.google.firebase.auth.FirebaseUser;
 public class Login extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private EditText login_email_edittext, login_password_edittext;
-    private Button loginBtn;
+    private Button loginBtn, registerScreenBtn;
 //    private SignInButton google_signin_btn;
 
     @Override
@@ -29,9 +33,12 @@ public class Login extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signin);
 
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+
         login_email_edittext = findViewById(R.id.login_email_edittext);
         login_password_edittext = findViewById(R.id.login_password_edittext);
         loginBtn = findViewById(R.id.loginBtn);
+        registerScreenBtn = findViewById(R.id.registerScreenBtn);
 //        google_signin_btn = findViewById(R.id.google_signin_btn);
 
         mAuth = FirebaseAuth.getInstance();
@@ -42,6 +49,13 @@ public class Login extends AppCompatActivity {
             startActivity(i);
             finish();
         }
+
+        registerScreenBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(Login.this, createAccount.class));
+            }
+        });
 
         loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -79,6 +93,16 @@ public class Login extends AppCompatActivity {
                             }
                         });
 
+            }
+        });
+        login_password_edittext.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_DONE){
+                    loginBtn.performClick();
+                    return true;
+                }
+                return false;
             }
         });
     }

@@ -7,33 +7,56 @@
     tools:context=".Login">
 
     <LinearLayout
+        android:id="@+id/credentialsLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:orientation="vertical"
         android:gravity="center">
 
-        <EditText
-            android:id="@+id/login_email_edittext"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/login_email_layout"
             android:layout_width="300dp"
             android:layout_height="wrap_content"
-            android:inputType="textEmailAddress"
-            android:background="@drawable/rounded_input"
-            android:paddingHorizontal="15dp"
-            android:paddingVertical="10dp"
-            android:hint="Email address"
-            android:layout_marginVertical="10dp"/>
+            app:boxCornerRadiusTopStart="10dp"
+            app:boxCornerRadiusBottomEnd="10dp"
+            app:boxCornerRadiusBottomStart="10dp"
+            app:boxCornerRadiusTopEnd="10dp"
+            app:boxBackgroundColor="@color/white"
+            android:layout_marginVertical="10dp">
 
-        <EditText
-            android:id="@+id/login_password_edittext"
+            <EditText
+                android:id="@+id/login_email_edittext"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:hint="Email Address"
+                android:inputType="textEmailAddress"
+                android:imeOptions="actionNext"
+                />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/login_password_layout"
             android:layout_width="300dp"
             android:layout_height="wrap_content"
-            android:inputType="textPassword"
-            android:paddingHorizontal="15dp"
-            android:paddingVertical="10dp"
-            android:background="@drawable/rounded_input"
-            android:layout_marginVertical="10dp"
-            android:hint="Password"/>
+            app:boxCornerRadiusTopStart="10dp"
+            app:boxCornerRadiusBottomEnd="10dp"
+            app:boxCornerRadiusBottomStart="10dp"
+            app:boxCornerRadiusTopEnd="10dp"
+            app:boxBackgroundColor="@color/white"
+            android:layout_marginVertical="10dp">
+
+            <EditText
+                android:id="@+id/login_password_edittext"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:hint="Password"
+                android:inputType="textEmailAddress"
+                android:imeOptions="actionDone"
+                />
+
+        </com.google.android.material.textfield.TextInputLayout>
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/loginBtn"
@@ -63,5 +86,28 @@
 <!--            android:layout_marginBottom="16dp" />-->
 
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/registerText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="70dp"
+        android:text="Not Registered?"
+        android:textSize="15sp"
+        android:layout_below="@id/credentialsLayout"/>
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/registerScreenBtn"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/registerText"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="25dp"
+        android:layout_marginBottom="60dp"
+        android:text="Register Now"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:background="@drawable/rounded_blue_button"/>
 
 </RelativeLayout>
