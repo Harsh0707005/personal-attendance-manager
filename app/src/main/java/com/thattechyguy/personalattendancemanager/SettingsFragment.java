@@ -1,12 +1,23 @@
 package com.thattechyguy.personalattendancemanager;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+import android.widget.Toast;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.thattechyguy.personalattendancemanager.Interfaces.booleanSuccessCallback;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -55,7 +66,59 @@ public class SettingsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_settings, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_settings, container, false);
+
+        ListView listView = rootView.findViewById(R.id.listView);
+
+        // Sample list items
+        String[] settingsOptions = {"Clear All Schedules", "Logout from the device", "Delete your data"};
+
+        // Creating an adapter
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(),
+                android.R.layout.simple_list_item_1, settingsOptions);
+
+        // Setting the adapter
+        listView.setAdapter(adapter);
+
+        // Handling item click
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String selectedItem = (String) parent.getItemAtPosition(position);
+                if (selectedItem.equals("Delete your data")) {
+                    // Navigate to DeleteAccountActivity
+//                    startActivity(new Intent(getContext(), deleteAccount.class));
+                } else if (selectedItem.equals("Logout from the device")) {
+                    AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
+                    alert.setTitle("Caution");
+                    alert.setMessage("Are you sure you want to logout from the device?");
+                    alert.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            FirebaseAuth.getInstance().signOut();
+//                            startActivity(new Intent(getContext(), Login.class));
+                            Intent intent = new Intent(getContext(), Login.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                            startActivity(intent);
+                            getActivity().finish();
+                            dialog.dismiss();
+                        }
+                    });
+
+                    alert.setNegativeButton("No", new DialogInterface.OnClickListener() {
+
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+
+                    alert.show();
+                }
+            }
+        });
+
+        return rootView;
     }
 }
