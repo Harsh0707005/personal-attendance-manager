@@ -12,7 +12,8 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:orientation="vertical"
-        android:gravity="center">
+        android:gravity="center"
+        android:layout_gravity="center">
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/login_email_layout"
@@ -69,45 +70,58 @@
             android:text="Login"
             />
 
-<!--        <View-->
-<!--            android:id="@+id/line"-->
-<!--            android:layout_width="200dp"-->
-<!--            android:layout_height="2dp"-->
-<!--            android:layout_marginTop="20dp"-->
-<!--            android:background="@color/light_gray" />-->
+        <View
+            android:id="@+id/line"
+            android:layout_width="200dp"
+            android:layout_height="2dp"
+            android:layout_marginTop="20dp"
+            android:background="@color/light_gray" />
 
-<!--        <com.google.android.gms.common.SignInButton-->
-<!--            android:id="@+id/google_signin_btn"-->
-<!--            android:layout_width="200dp"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_marginStart="16dp"-->
-<!--            android:layout_marginTop="16dp"-->
-<!--            android:layout_marginEnd="16dp"-->
-<!--            android:layout_marginBottom="16dp" />-->
+        <com.google.android.gms.common.SignInButton
+            android:id="@+id/google_signin_btn"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="25dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="16dp" />
+
+        <View
+            android:id="@+id/line1"
+            android:layout_width="200dp"
+            android:layout_height="2dp"
+            android:layout_marginTop="10dp"
+            android:background="@color/light_gray" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:layout_marginBottom="40dp">
+
+            <TextView
+                android:id="@+id/registerText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Not Registered?"
+                android:layout_marginTop="20dp"
+                android:textSize="15sp"
+                />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/registerScreenBtn"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="25dp"
+                android:text="Register Now"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:background="@drawable/rounded_blue_button"/>
+
+        </LinearLayout>
 
     </LinearLayout>
-
-    <TextView
-        android:id="@+id/registerText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="70dp"
-        android:text="Not Registered?"
-        android:textSize="15sp"
-        android:layout_below="@id/credentialsLayout"/>
-
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/registerScreenBtn"
-        android:layout_width="200dp"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/registerText"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="25dp"
-        android:layout_marginBottom="60dp"
-        android:text="Register Now"
-        android:textAllCaps="false"
-        android:textColor="@color/white"
-        android:background="@drawable/rounded_blue_button"/>
 
 </RelativeLayout>

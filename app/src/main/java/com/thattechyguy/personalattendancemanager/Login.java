@@ -17,38 +17,70 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.SignInButton;
+import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GoogleAuthProvider;
 
 public class Login extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private EditText login_email_edittext, login_password_edittext;
     private Button loginBtn, registerScreenBtn;
-//    private SignInButton google_signin_btn;
+    private SignInButton google_signin_btn;
+    private GoogleSignInClient googleSignInClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signin);
 
-        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+//        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
 
         login_email_edittext = findViewById(R.id.login_email_edittext);
         login_password_edittext = findViewById(R.id.login_password_edittext);
         loginBtn = findViewById(R.id.loginBtn);
         registerScreenBtn = findViewById(R.id.registerScreenBtn);
-//        google_signin_btn = findViewById(R.id.google_signin_btn);
+        google_signin_btn = findViewById(R.id.google_signin_btn);
+
+        TextView textView = (TextView) google_signin_btn.getChildAt(0);
+        textView.setText("Continue with Google");
 
         mAuth = FirebaseAuth.getInstance();
 
         FirebaseUser user = mAuth.getCurrentUser();
         if (user != null) {
+            Intent i = new Intent(this, homeBottomNav.class);
+            startActivity(i);
+            finish();
+        }
+
+        GoogleSignInOptions googleSignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(this.getResources().getString(R.string.server_client_id))
+                .requestEmail()
+                .build();
+
+        googleSignInClient = GoogleSignIn.getClient(Login.this, googleSignInOptions);
+
+        google_signin_btn.setOnClickListener((View.OnClickListener) view -> {
+            // Initialize sign in intent
+            Intent intent = googleSignInClient.getSignInIntent();
+            // Start activity for result
+            startActivityForResult(intent, 100);
+        });
+
+        if (mAuth.getCurrentUser()!=null){
             Intent i = new Intent(this, homeBottomNav.class);
             startActivity(i);
             finish();
@@ -109,6 +141,53 @@ public class Login extends AppCompatActivity {
                 return false;
             }
         });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        // Check condition
+        if (requestCode == 100) {
+            // When request code is equal to 100 initialize task
+            Task<GoogleSignInAccount> signInAccountTask = GoogleSignIn.getSignedInAccountFromIntent(data);
+            // check condition
+            if (signInAccountTask.isSuccessful()) {
+                // When google sign in successful initialize string
+                String s = "Google sign in successful";
+                // Display Toast
+                displayToast(s);
+                // Initialize sign in account
+                try {
+                    // Initialize sign in account
+                    GoogleSignInAccount googleSignInAccount = signInAccountTask.getResult(ApiException.class);
+                    // Check condition
+                    if (googleSignInAccount != null) {
+                        // When sign in account is not equal to null initialize auth credential
+                        AuthCredential authCredential = GoogleAuthProvider.getCredential(googleSignInAccount.getIdToken(), null);
+                        // Check credential
+                        mAuth.signInWithCredential(authCredential).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                            @Override
+                            public void onComplete(@NonNull Task<AuthResult> task) {
+                                // Check condition
+                                if (task.isSuccessful()) {
+                                    // When task is successful redirect to profile activity display Toast
+                                    startActivity(new Intent(Login.this, homeBottomNav.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+                                    displayToast("Authentication successful");
+                                } else {
+                                    // When task is unsuccessful display Toast
+                                    displayToast("Authentication Failed :" + task.getException().getMessage());
+                                }
+                            }
+                        });
+                    }
+                } catch (ApiException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+    private void displayToast(String s) {
+        Toast.makeText(getApplicationContext(), s, Toast.LENGTH_SHORT).show();
     }
 //    @Override
 //    public boolean dispatchTouchEvent(MotionEvent event) {
