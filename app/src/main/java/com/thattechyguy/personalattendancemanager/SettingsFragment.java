@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import android.util.Log;
@@ -16,7 +17,15 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.thattechyguy.personalattendancemanager.Interfaces.booleanSuccessCallback;
 
 /**
@@ -32,6 +41,9 @@ public class SettingsFragment extends Fragment {
 
     private String mParam1;
     private String mParam2;
+
+    private FirebaseDatabase database;
+    private FirebaseUser user;
 
     public SettingsFragment() {
         // Required empty public constructor
@@ -68,10 +80,13 @@ public class SettingsFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_settings, container, false);
 
+        database = FirebaseDatabase.getInstance();
+        user = FirebaseAuth.getInstance().getCurrentUser();
+
         ListView listView = rootView.findViewById(R.id.listView);
 
         // Sample list items
-        String[] settingsOptions = {"Clear All Schedules", "Logout from the device", "Delete your data"};
+        String[] settingsOptions = {"Clear All Schedules", "Logout from the device", "Delete your Account"};
 
         // Creating an adapter
         ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(),
@@ -85,9 +100,40 @@ public class SettingsFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String selectedItem = (String) parent.getItemAtPosition(position);
-                if (selectedItem.equals("Delete your data")) {
-                    // Navigate to DeleteAccountActivity
-//                    startActivity(new Intent(getContext(), deleteAccount.class));
+                if (selectedItem.equals("Clear All Schedules")){
+
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                    builder.setMessage("Are you sure, you wish to clear all the schedules?");
+                    builder.setTitle("Alert!");
+                    builder.setCancelable(false);
+                    builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            DatabaseReference myRef = database.getReference("attendance/"+user.getUid());
+
+                            myRef.removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if (task.isSuccessful()){
+                                        Toast.makeText(getContext(), "All schedules cleared from Account", Toast.LENGTH_SHORT).show();
+                                    }else {
+                                        Toast.makeText(getContext(), "Error clearing schedules", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            });
+
+                        }
+                    });
+                    builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                        }
+                    });
+
+                    AlertDialog alertDialog = builder.create();
+                    alertDialog.show();
+                    
                 } else if (selectedItem.equals("Logout from the device")) {
                     AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
                     alert.setTitle("Caution");
@@ -98,9 +144,7 @@ public class SettingsFragment extends Fragment {
                         public void onClick(DialogInterface dialog, int which) {
                             FirebaseAuth.getInstance().signOut();
 //                            startActivity(new Intent(getContext(), Login.class));
-                            Intent intent = new Intent(getContext(), Login.class);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                            startActivity(intent);
+                            startActivity(new Intent(getContext(), Login.class));
                             getActivity().finish();
                             dialog.dismiss();
                         }
@@ -115,6 +159,51 @@ public class SettingsFragment extends Fragment {
                     });
 
                     alert.show();
+                }
+                else if (selectedItem.equals("Delete your Account")) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                    builder.setMessage("Are you sure, you want to delete your Account ?");
+                    builder.setTitle("Alert!");
+                    builder.setCancelable(false);
+                    builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            DatabaseReference myRef = database.getReference("attendance/"+user.getUid());
+
+                            myRef.removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if (task.isSuccessful()){
+                                        user.delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<Void> task) {
+                                                if (task.isSuccessful()){
+                                                    Toast.makeText(getContext(), "Account Deleted Successfully", Toast.LENGTH_SHORT).show();
+                                                }else{
+                                                    Toast.makeText(getContext(), "Error deleting your Account", Toast.LENGTH_SHORT).show();
+                                                }
+                                                startActivity(new Intent(getContext(), Login.class));
+                                                getActivity().finish();
+                                                dialog.dismiss();
+                                            }
+                                        });
+                                    }else {
+                                        Toast.makeText(getContext(), "Error deleting your account", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            });
+
+                        }
+                    });
+                    builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                        }
+                    });
+
+                    AlertDialog alertDialog = builder.create();
+                    alertDialog.show();
                 }
             }
         });
