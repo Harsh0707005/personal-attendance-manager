@@ -172,6 +172,7 @@ public class Login extends AppCompatActivity {
                                 if (task.isSuccessful()) {
                                     // When task is successful redirect to profile activity display Toast
                                     startActivity(new Intent(Login.this, homeBottomNav.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+                                    finish();
                                     displayToast("Authentication successful");
                                 } else {
                                     // When task is unsuccessful display Toast
