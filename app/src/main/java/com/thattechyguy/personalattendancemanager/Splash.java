@@ -8,7 +8,7 @@ import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class Splash extends AppCompatActivity {
-    private static final long SPLASH_DELAY = 2000;
+    private static final long SPLASH_DELAY = 1500;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
