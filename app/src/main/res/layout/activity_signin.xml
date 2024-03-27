@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Login">
+    tools:context=".Login"
+    android:background="@color/light_purple">
 
     <LinearLayout
         android:id="@+id/credentialsLayout"
@@ -40,6 +41,7 @@
                 android:hint="Email Address"
                 android:inputType="textEmailAddress"
                 android:imeOptions="actionNext"
+                android:textColor="@color/black"
                 />
 
         </com.google.android.material.textfield.TextInputLayout>
@@ -62,6 +64,7 @@
                 android:hint="Password"
                 android:inputType="textEmailAddress"
                 android:imeOptions="actionDone"
+                android:textColor="@color/black"
                 />
 
         </com.google.android.material.textfield.TextInputLayout>
@@ -115,6 +118,7 @@
                 android:text="Not Registered?"
                 android:layout_marginTop="20dp"
                 android:textSize="15sp"
+                android:textColor="@color/black"
                 />
 
             <androidx.appcompat.widget.AppCompatButton
