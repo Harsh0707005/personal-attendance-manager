@@ -162,9 +162,9 @@ public class DashboardFragment extends Fragment {
                     scheduleNames.add(schedule.get("scheduleName").toString());
                 }
 
-                ArrayAdapter<String> adapter = new ArrayAdapter<>(rootView.getContext(), android.R.layout.simple_spinner_dropdown_item, scheduleNames);
+                ArrayAdapter<String> adapter = new ArrayAdapter<>(rootView.getContext(), R.layout.spinner_layout, scheduleNames);
 
-                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                adapter.setDropDownViewResource(R.layout.spinner_layout);
 
                 spinner.setAdapter(adapter);
 

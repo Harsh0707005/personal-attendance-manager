@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".AddSchedule">
+    tools:context=".AddSchedule"
+    android:background="@drawable/bg7">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
@@ -149,7 +150,8 @@
                     android:id="@+id/daysSpinner"
                     android:layout_width="300dp"
                     android:layout_height="wrap_content"
-                    android:gravity="center" />
+                    android:gravity="center"
+                    android:background="@drawable/spinner_bg"/>
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="300dp"
