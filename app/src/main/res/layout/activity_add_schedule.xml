@@ -151,7 +151,7 @@
                     android:layout_width="300dp"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:background="@drawable/spinner_bg"/>
+                    android:background="@drawable/spinner_bg" />
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="300dp"
