@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Personal Attendance Manager</string>
+    <string name="app_name">Attendance Buddy</string>
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="server_client_id">1062862133047-3dbns7tsok8t2i4j99dskajt9pni8iuc.apps.googleusercontent.com</string>
