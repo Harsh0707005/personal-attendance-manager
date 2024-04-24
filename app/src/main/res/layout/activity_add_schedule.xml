@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".AddSchedule"
-    android:background="@drawable/bg7">
+    android:background="@drawable/bg7"
+    tools:context=".AddSchedule">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
@@ -13,8 +13,23 @@
         android:layout_height="wrap_content"
         android:elevation="4dp"
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:elevation="10dp"
+        android:indeterminate="true"
+        android:indeterminateDrawable="@drawable/blue_progress_bg"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.5" />
 
     <ScrollView
         android:layout_width="0dp"
@@ -28,30 +43,28 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="20dp"
-            >
+            android:layout_margin="20dp">
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/scheduleNameLayout"
                 android:layout_width="300dp"
                 android:layout_height="wrap_content"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.1"
-                app:boxCornerRadiusTopStart="10dp"
+                app:boxBackgroundColor="@color/white"
                 app:boxCornerRadiusBottomEnd="10dp"
                 app:boxCornerRadiusBottomStart="10dp"
                 app:boxCornerRadiusTopEnd="10dp"
-                app:boxBackgroundColor="@color/white">
+                app:boxCornerRadiusTopStart="10dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.1">
 
                 <EditText
                     android:id="@+id/scheduleNameEdittext"
                     android:layout_width="300dp"
                     android:layout_height="wrap_content"
                     android:hint="Schedule Name"
-                    android:inputType="text"
-                    />
+                    android:inputType="text" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -60,16 +73,15 @@
                 android:layout_width="300dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.492"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/scheduleNameLayout"
-                app:boxCornerRadiusTopStart="10dp"
+                app:boxBackgroundColor="@color/white"
                 app:boxCornerRadiusBottomEnd="10dp"
                 app:boxCornerRadiusBottomStart="10dp"
                 app:boxCornerRadiusTopEnd="10dp"
-                app:boxBackgroundColor="@color/white"
-                >
+                app:boxCornerRadiusTopStart="10dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.492"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/scheduleNameLayout">
 
 
                 <EditText
@@ -79,47 +91,47 @@
                     android:hint="Schedule Description (Optional)"
                     android:inputType="textCapSentences|textMultiLine"
                     android:lines="3"
-                    android:scrollHorizontally="false"
-                    android:padding="10dp" />
+                    android:padding="10dp"
+                    android:scrollHorizontally="false" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
-<!--            <com.google.android.material.textfield.TextInputLayout-->
-<!--                android:id="@+id/pickDate"-->
-<!--                android:layout_width="300dp"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_marginTop="20dp"-->
-<!--                app:layout_constraintEnd_toEndOf="parent"-->
-<!--                app:layout_constraintStart_toStartOf="parent"-->
-<!--                app:layout_constraintTop_toBottomOf="@+id/scheduleDescriptionLayout"-->
-<!--                app:boxCornerRadiusTopStart="10dp"-->
-<!--                app:boxCornerRadiusBottomEnd="10dp"-->
-<!--                app:boxCornerRadiusBottomStart="10dp"-->
-<!--                app:boxCornerRadiusTopEnd="10dp"-->
-<!--                app:boxBackgroundColor="@color/white"-->
-<!--                >-->
-<!--                <EditText-->
-<!--                    android:id="@+id/edFirstName"-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:hint="fefew"-->
-<!--                    android:inputType="textCapWords"-->
-<!--                    />-->
-<!--            </com.google.android.material.textfield.TextInputLayout>-->
+            <!--            <com.google.android.material.textfield.TextInputLayout-->
+            <!--                android:id="@+id/pickDate"-->
+            <!--                android:layout_width="300dp"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:layout_marginTop="20dp"-->
+            <!--                app:layout_constraintEnd_toEndOf="parent"-->
+            <!--                app:layout_constraintStart_toStartOf="parent"-->
+            <!--                app:layout_constraintTop_toBottomOf="@+id/scheduleDescriptionLayout"-->
+            <!--                app:boxCornerRadiusTopStart="10dp"-->
+            <!--                app:boxCornerRadiusBottomEnd="10dp"-->
+            <!--                app:boxCornerRadiusBottomStart="10dp"-->
+            <!--                app:boxCornerRadiusTopEnd="10dp"-->
+            <!--                app:boxBackgroundColor="@color/white"-->
+            <!--                >-->
+            <!--                <EditText-->
+            <!--                    android:id="@+id/edFirstName"-->
+            <!--                    android:layout_width="match_parent"-->
+            <!--                    android:layout_height="wrap_content"-->
+            <!--                    android:hint="fefew"-->
+            <!--                    android:inputType="textCapWords"-->
+            <!--                    />-->
+            <!--            </com.google.android.material.textfield.TextInputLayout>-->
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/pickDateLayout"
                 android:layout_width="300dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:boxCornerRadiusTopStart="10dp"
+                android:hint="Start Date"
+                app:boxBackgroundColor="@color/white"
                 app:boxCornerRadiusBottomEnd="10dp"
                 app:boxCornerRadiusBottomStart="10dp"
                 app:boxCornerRadiusTopEnd="10dp"
-                app:boxBackgroundColor="@color/white"
-                android:hint="Start Date"
+                app:boxCornerRadiusTopStart="10dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/scheduleDescriptionLayout">
 
                 <EditText
@@ -150,18 +162,18 @@
                     android:id="@+id/daysSpinner"
                     android:layout_width="300dp"
                     android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:background="@drawable/spinner_bg" />
+                    android:background="@drawable/spinner_bg"
+                    android:gravity="center" />
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="300dp"
                     android:layout_height="wrap_content"
                     android:layout_marginVertical="20dp"
-                    app:boxCornerRadiusTopStart="10dp"
+                    app:boxBackgroundColor="@color/white"
                     app:boxCornerRadiusBottomEnd="10dp"
                     app:boxCornerRadiusBottomStart="10dp"
                     app:boxCornerRadiusTopEnd="10dp"
-                    app:boxBackgroundColor="@color/white">
+                    app:boxCornerRadiusTopStart="10dp">
 
                     <EditText
                         android:id="@+id/classesNamesEdittext"
@@ -170,8 +182,7 @@
                         android:layout_marginVertical="20dp"
                         android:hint="Classes (Comma Separated)"
                         android:inputType="text"
-                        android:lines="3"
-                        />
+                        android:lines="3" />
                 </com.google.android.material.textfield.TextInputLayout>
 
             </LinearLayout>

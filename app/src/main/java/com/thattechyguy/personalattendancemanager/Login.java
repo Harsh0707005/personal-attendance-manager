@@ -13,6 +13,7 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,6 +39,7 @@ public class Login extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private EditText login_email_edittext, login_password_edittext;
     private Button loginBtn, registerScreenBtn;
+    private ProgressBar progressBar;
     private SignInButton google_signin_btn;
     private GoogleSignInClient googleSignInClient;
 
@@ -53,6 +55,7 @@ public class Login extends AppCompatActivity {
         loginBtn = findViewById(R.id.loginBtn);
         registerScreenBtn = findViewById(R.id.registerScreenBtn);
         google_signin_btn = findViewById(R.id.google_signin_btn);
+        progressBar = findViewById(R.id.progressBar);
 
         TextView textView = (TextView) google_signin_btn.getChildAt(0);
         textView.setText("Continue with Google");
@@ -97,14 +100,21 @@ public class Login extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
+                progressBar.setVisibility(View.VISIBLE);
+                loginBtn.setEnabled(false);
+
                 String email = login_email_edittext.getText().toString();
                 String password = login_password_edittext.getText().toString();
 
                 if (email.isEmpty() || password.isEmpty()) {
                     Toast.makeText(Login.this, "Email or Password cannot be Empty!!!", Toast.LENGTH_SHORT).show();
+                    progressBar.setVisibility(View.GONE);
+                    loginBtn.setEnabled(true);
                     return;
                 } else if (password.length() <= 6) {
                     Toast.makeText(Login.this, "Password should have atleast 6 characters", Toast.LENGTH_SHORT).show();
+                    progressBar.setVisibility(View.GONE);
+                    loginBtn.setEnabled(true);
                     return;
                 }
 
@@ -125,6 +135,9 @@ public class Login extends AppCompatActivity {
                                     // If sign in fails, display a message to the user.
                                     Log.d("harsh", "signInWithEmail:failure", task.getException());
                                     Toast.makeText(Login.this, "Incorrect email/password", Toast.LENGTH_SHORT).show();
+
+                                    progressBar.setVisibility(View.GONE);
+                                    loginBtn.setEnabled(true);
                                 }
                             }
                         });

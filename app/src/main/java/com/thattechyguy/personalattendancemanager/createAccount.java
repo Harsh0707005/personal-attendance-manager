@@ -48,6 +48,7 @@ public class createAccount extends AppCompatActivity {
         register_email_edittext = findViewById(R.id.register_email_edittext);
         register_password_edittext = findViewById(R.id.register_password_edittext);
         createAccountBtn = findViewById(R.id.createAccountBtn);
+        progressBar = findViewById(R.id.progressBar);
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -55,14 +56,22 @@ public class createAccount extends AppCompatActivity {
         createAccountBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                progressBar.setVisibility(View.VISIBLE);
+                createAccountBtn.setEnabled(false);
+
                 String email = register_email_edittext.getText().toString();
                 String password = register_password_edittext.getText().toString();
 
                 if (email.isEmpty() || password.isEmpty()) {
                     Toast.makeText(createAccount.this, "Email or Password cannot be Empty!!!", Toast.LENGTH_SHORT).show();
+                    progressBar.setVisibility(View.GONE);
+                    createAccountBtn.setEnabled(true);
                     return;
                 } else if (password.length() <= 6) {
                     Toast.makeText(createAccount.this, "Password should have atleast 6 characters", Toast.LENGTH_SHORT).show();
+                    progressBar.setVisibility(View.GONE);
+                    createAccountBtn.setEnabled(true);
                     return;
                 }
 
@@ -88,14 +97,20 @@ public class createAccount extends AppCompatActivity {
                                             // Check if the error message indicates that the user already exists
                                             if (errorMessage.contains("already in use")) {
                                                 Toast.makeText(createAccount.this, "User already exists", Toast.LENGTH_SHORT).show();
+                                                progressBar.setVisibility(View.GONE);
+                                                createAccountBtn.setEnabled(true);
                                             } else {
                                                 Log.d("harsh", errorMessage);
                                             }
                                         } else {
                                             Toast.makeText(createAccount.this, "Unknown error occurred", Toast.LENGTH_SHORT).show();
+                                            progressBar.setVisibility(View.GONE);
+                                            createAccountBtn.setEnabled(true);
                                         }
                                     } else {
                                         Toast.makeText(createAccount.this, "Unknown error occurred", Toast.LENGTH_SHORT).show();
+                                        progressBar.setVisibility(View.GONE);
+                                        createAccountBtn.setEnabled(true);
                                     }
                                 }
                             }

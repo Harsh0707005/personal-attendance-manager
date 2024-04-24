@@ -17,6 +17,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -38,6 +39,7 @@ public class AddSchedule extends AppCompatActivity {
     private LinearLayout classesLayout;
     private Spinner daysSpinner;
     private ArrayAdapter<String> adapter;
+    private ProgressBar progressBar;
     private FirebaseAuth mAuth;
 
     @Override
@@ -53,6 +55,7 @@ public class AddSchedule extends AppCompatActivity {
         daysSpinner = findViewById(R.id.daysSpinner);
         classesLayout = findViewById(R.id.classesLayout);
         pickDate = findViewById(R.id.pickDate);
+        progressBar = findViewById(R.id.progressBar);
 
 //        Calendar calendar = Calendar.getInstance();
 //        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
@@ -191,6 +194,9 @@ public class AddSchedule extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 try {
+                    progressBar.setVisibility(View.VISIBLE);
+                    addSchedule.setEnabled(false);
+
                     String scheduleName = scheduleNameEdittext.getText().toString();
                     String scheduleDescription = scheduleDescriptionEdittext.getText().toString();
                     String startDate = pickDate.getText().toString().replace("/", "");
@@ -215,15 +221,21 @@ public class AddSchedule extends AppCompatActivity {
                             public void onCallback(int success) {
                                 if (success == 1) {
                                     Toast.makeText(AddSchedule.this, "Schedule Added Successfully", Toast.LENGTH_SHORT).show();
+                                    progressBar.setVisibility(View.GONE);
+                                    addSchedule.setEnabled(true);
                                     finish();
                                 } else {
                                     Toast.makeText(AddSchedule.this, "Error Adding Schedule", Toast.LENGTH_SHORT).show();
+                                    progressBar.setVisibility(View.GONE);
+                                    addSchedule.setEnabled(true);
                                     finish();
                                 }
                             }
                         });
                     } else {
                         Toast.makeText(AddSchedule.this, "Schedule Data cannot be Empty!!!", Toast.LENGTH_SHORT).show();
+                        progressBar.setVisibility(View.GONE);
+                        addSchedule.setEnabled(true);
                     }
                 } catch (Exception e) {
                     Log.d("harsh", "add " + e.getMessage());
