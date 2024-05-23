@@ -20,7 +20,7 @@
             android:paddingHorizontal="30dp"
             android:paddingVertical="15dp"
             android:textColor="@color/black"
-            android:layout_alignParentEnd="true"/>
+            android:layout_alignParentEnd="true" />
 
         <LinearLayout
             android:id="@+id/noScheduleLayout"
